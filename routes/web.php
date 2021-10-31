@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('clear-all', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    Artisan::call('config:cache');
+    return '<h1>Cache Clear</h1>';
+});
+
 Route::get('/', function () {
     return view('auth.login');
+});
+
+Route::get('/register', function () {
+    return view('auth.register');
+});
+
+Route::get('/dashboard', function () {
+    return view('aslab.index');
 });
