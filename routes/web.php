@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -23,8 +24,14 @@ Route::get('clear-all', function () {
 });
 
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect()->route('auth.login');
 });
+
+//group auth
+Route::get('/login', [AuthController::class, 'index'])->name('auth.login');
+Route::post('/login', [AuthController::class, 'store'])->name('auth.store');
+Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+//end group auth
 
 Route::get('/register', function () {
     return view('auth.register');
@@ -32,4 +39,18 @@ Route::get('/register', function () {
 
 Route::get('/dashboard', function () {
     return view('aslab.index');
+});
+
+// Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
+//     Route::get('/praktikan', function () {
+//         // return view('aslab.index');
+//         dd('ini praktikan');
+//     });
+// });
+
+Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
+    Route::get('/aslab', function () {
+        // return view('aslab.index');
+        dd('ini aslab');
+    });
 });
