@@ -14,13 +14,14 @@ class AuthController extends Controller
      */
     public function index()
     {
-        if (Auth::guard('mahasiswa')->check()) {
-            if (auth()->guard('mahasiswa')->user()->role_id == 1) {
-                dd('aslab');
-            } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
-                dd('praktikan');
-            }
-        }
+        // if (Auth::guard('mahasiswa')->check()) {
+        //     if (auth()->guard('mahasiswa')->user()->role_id == 1) {
+        //         dd('aslab');
+        //     } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
+        //         dd('praktikan');
+        //     }
+        // }
+        // dd(Auth::check());
         return view('auth.login');
     }
 
@@ -46,13 +47,14 @@ class AuthController extends Controller
             'npm' => 'required',
             'password' => 'required',
         ]);
-        $cek = Auth::guard('mahasiswa')->attempt(['npm_mahasiswa' => $request->npm, 'password' => $request->password]);
+        $cek = Auth::attempt(['email' => $request->npm, 'password' => $request->password]);
+        dd($cek);
         if ($cek) {
-            if (auth()->guard('mahasiswa')->user()->role_id == 1) {
-                dd('aslab');
-            } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
-                dd('praktikan');
-            }
+            // if (auth()->user()->role_id == 1) {
+            //     dd(auth()->user());
+            // } else if (auth()->user()->role_id == 2) {
+            //     dd('praktikan');
+            // }
         }
     }
 
@@ -103,7 +105,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::guard('mahasiswa')->logout();
+        // Auth::guard('mahasiswa')->logout();
 
         return redirect()->route('auth.login');
     }

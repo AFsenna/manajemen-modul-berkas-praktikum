@@ -10,15 +10,13 @@ class Mahasiswa extends Authenticatable
 {
     use HasFactory;
 
-    protected $table = "mahasiswa";
     public $primaryKey = 'id_mahasiswa';
+    protected $table = "mahasiswa";
 
-    protected $fillable = [
-        'nama_mahasiswa', 'notelp_mahasiswa', 'npm_mahasiswa', 'role_id', 'password', 'email_mahasiswa'
-    ];
+    protected $guarded = [];
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
+    // public function role()
+    // {
+    //     return $this->belongsTo(Role::class, 'role_id');
+    // }
 }

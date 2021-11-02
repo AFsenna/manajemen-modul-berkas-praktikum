@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Mahasiswa;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,6 +31,11 @@ class MahasiswaSeeder extends Seeder
             'notelp_mahasiswa' => '082285132960',
             'email_mahasiswa' => 'araona@gmail.com',
             'password' => Hash::make('araona'),
+        ]);
+        User::create([
+            'name' => 'senna',
+            'email' => 'gaja@gmail.com',
+            'password' => Hash::make('senna')
         ]);
     }
 }

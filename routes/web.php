@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,9 @@ Route::get('/register', function () {
 Route::get('/dashboard', function () {
     return view('aslab.index');
 });
+Route::get('/cek', function () {
+    dd(Auth::check());
+});
 
 // Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
 //     Route::get('/praktikan', function () {
@@ -48,7 +52,7 @@ Route::get('/dashboard', function () {
 //     });
 // });
 
-Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
+Route::name('aslab.')->group(function () {
     Route::get('/aslab', function () {
         // return view('aslab.index');
         dd('ini aslab');
