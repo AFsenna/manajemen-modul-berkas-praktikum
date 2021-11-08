@@ -35,14 +35,18 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 //end group auth
 
 Route::get('/register', function () {
-    return view('auth.register');
+    // return view('auth.register');
+    dd(auth()->guard('mahasiswa')->user());
 });
 
 Route::get('/dashboard', function () {
     return view('aslab.index');
 });
 Route::get('/cek', function () {
-    dd(Auth::check());
+    dd(auth()->guard('mahasiswa')->user());
+});
+Route::get('/coba', function () {
+    dd(auth()->guard('mahasiswa')->user());
 });
 
 // Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {

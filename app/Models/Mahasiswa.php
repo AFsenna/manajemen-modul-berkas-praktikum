@@ -15,8 +15,8 @@ class Mahasiswa extends Authenticatable
 
     protected $guarded = [];
 
-    // public function role()
-    // {
-    //     return $this->belongsTo(Role::class, 'role_id');
-    // }
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }

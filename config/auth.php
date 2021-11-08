@@ -42,10 +42,10 @@ return [
         ],
 
         // New Auth
-        // 'mahasiswa' => [
-        //     'driver' => 'session',
-        //     'provider' => 'mahasiswa',
-        // ],
+        'mahasiswa' => [
+            'driver' => 'session',
+            'provider' => 'mahasiswa',
+        ],
     ],
 
     /*
@@ -77,10 +77,10 @@ return [
         // ],
 
         // New Auth
-        // 'mahasiswa' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\Mahasiswa::class,
-        // ],
+        'mahasiswa' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Mahasiswa::class,
+        ],
     ],
 
     /*

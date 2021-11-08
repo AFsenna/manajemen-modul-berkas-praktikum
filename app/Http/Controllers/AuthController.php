@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
@@ -14,14 +15,13 @@ class AuthController extends Controller
      */
     public function index()
     {
-        // if (Auth::guard('mahasiswa')->check()) {
-        //     if (auth()->guard('mahasiswa')->user()->role_id == 1) {
-        //         dd('aslab');
-        //     } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
-        //         dd('praktikan');
-        //     }
-        // }
-        // dd(Auth::check());
+        if (Auth::guard('mahasiswa')->check()) {
+            if (auth()->guard('mahasiswa')->user()->role_id == 1) {
+                dd('aslab');
+            } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
+                dd('praktikan');
+            }
+        }
         return view('auth.login');
     }
 
@@ -47,14 +47,17 @@ class AuthController extends Controller
             'npm' => 'required',
             'password' => 'required',
         ]);
-        $cek = Auth::attempt(['email' => $request->npm, 'password' => $request->password]);
-        dd($cek);
+        $cek = Auth::guard('mahasiswa')->attempt(['npm_mahasiswa' => $request->npm, 'password' => $request->password]);
+        // ddd(session()->all());
         if ($cek) {
-            // if (auth()->user()->role_id == 1) {
-            //     dd(auth()->user());
-            // } else if (auth()->user()->role_id == 2) {
-            //     dd('praktikan');
-            // }
+            if (auth()->guard('mahasiswa')->user()->role_id == 1) {
+                echo 'halo';
+            } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
+                echo 'aaaaa';
+            }
+            // $request->session()->regenerate();
+
+            // return redirect('/cek');
         }
     }
 
@@ -105,7 +108,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        // Auth::guard('mahasiswa')->logout();
+        auth()->guard('mahasiswa')->logout();
 
         return redirect()->route('auth.login');
     }
