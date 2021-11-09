@@ -17,9 +17,9 @@ class AuthController extends Controller
     {
         if (Auth::guard('mahasiswa')->check()) {
             if (auth()->guard('mahasiswa')->user()->role_id == 1) {
-                dd('aslab');
+                return view('aslab.index');
             } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
-                dd('praktikan');
+                return view('praktikan.index');
             }
         }
         return view('auth.login');
@@ -32,7 +32,6 @@ class AuthController extends Controller
      */
     public function create()
     {
-        return view('auth.register');
     }
 
     /**
@@ -48,16 +47,12 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         $cek = Auth::guard('mahasiswa')->attempt(['npm_mahasiswa' => $request->npm, 'password' => $request->password]);
-        // ddd(session()->all());
         if ($cek) {
             if (auth()->guard('mahasiswa')->user()->role_id == 1) {
-                echo 'halo';
+                return redirect('/dashboard-aslab');
             } else if (auth()->guard('mahasiswa')->user()->role_id == 2) {
-                echo 'aaaaa';
+                return redirect('/dashboard-praktikan');
             }
-            // $request->session()->regenerate();
-
-            // return redirect('/cek');
         }
     }
 

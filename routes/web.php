@@ -34,31 +34,31 @@ Route::post('/login', [AuthController::class, 'store'])->name('auth.store');
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 //end group auth
 
-Route::get('/register', function () {
-    // return view('auth.register');
-    dd(auth()->guard('mahasiswa')->user());
+Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
+    Route::get('/praktikan', function () {
+        // return view('aslab.index');
+        dd('ini praktikan');
+    });
+
+    Route::get('/dashboard-praktikan', function () {
+        return view('praktikan.index');
+    });
 });
 
-Route::get('/dashboard', function () {
-    return view('aslab.index');
-});
-Route::get('/cek', function () {
-    dd(auth()->guard('mahasiswa')->user());
-});
-Route::get('/coba', function () {
-    dd(auth()->guard('mahasiswa')->user());
-});
-
-// Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
-//     Route::get('/praktikan', function () {
-//         // return view('aslab.index');
-//         dd('ini praktikan');
-//     });
-// });
-
-Route::name('aslab.')->group(function () {
+Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
     Route::get('/aslab', function () {
         // return view('aslab.index');
         dd('ini aslab');
     });
+
+    Route::get('/dashboard-aslab', function () {
+        return view('aslab.index');
+    });
 });
+
+// Route::name('aslab.')->group(function () {
+//     Route::get('/aslab', function () {
+//         // return view('aslab.index');
+//         dd('ini aslab');
+//     });
+// });

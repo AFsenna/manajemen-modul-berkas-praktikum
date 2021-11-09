@@ -18,23 +18,32 @@ class CekLogin
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        // dd(Auth::guard('admin')->user());    
         foreach ($roles as $key => $row) {
             if (Auth::guard('mahasiswa')->user()) {
                 if ($row == "aslab") {
                     $cek = false;
                     foreach ($roles as $key => $aslab) {
                         //1 = aslab
-                        if (Auth::guard($aslab)->user()->role_id == 1) {
+                        if (Auth::guard('mahasiswa')->user()->role_id == 1) {
                             $cek = true;
                         }
                     }
+                }
 
-                    if ($cek) {
-                        return $next($request);
-                    } else {
-                        abort(403, 'Anda tidak diberikan ijin akses halaman ini');
+                if ($row == "praktikan") {
+                    $cek = false;
+                    foreach ($roles as $key => $aslab) {
+                        //2 = praktikan
+                        if (Auth::guard('mahasiswa')->user()->role_id == 2) {
+                            $cek = true;
+                        }
                     }
+                }
+
+                if ($cek) {
+                    return $next($request);
+                } else {
+                    abort(403, 'Anda tidak diberikan ijin akses halaman ini');
                 }
             }
         }
