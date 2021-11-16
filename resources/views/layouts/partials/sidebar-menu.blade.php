@@ -10,11 +10,11 @@
 
 <!-- Heading -->
 <div class="sidebar-heading">
-    Interface
+    Menu
 </div>
 
 <!-- Nav Item - Pages Collapse Menu -->
-<li class="nav-item">
+{{-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
         aria-controls="collapseTwo">
         <i class="fas fa-fw fa-cog"></i>
@@ -27,11 +27,19 @@
             <a class="collapse-item" href="cards.html">Cards</a>
         </div>
     </div>
-</li>
+</li> --}}
 
-<!-- Nav Item - Charts -->
-<li class="nav-item">
-    <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-chart-area"></i>
-        <span>Charts</span></a>
-</li>
+@if (auth()->guard('mahasiswa')->user()->role_id == 2)
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('praktikan.berkasPrak') }}">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Berkas Praktikum</span></a>
+    </li>
+@elseif (auth()->guard('mahasiswa')->user()->role_id == 1)
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('aslab.penyimpananModul') }}">
+            <i class="fas fa-fw fa-books"></i>
+            <span>Penyimpanan Modul</span></a>
+    </li>
+@endif

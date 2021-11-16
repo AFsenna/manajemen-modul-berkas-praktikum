@@ -19,7 +19,12 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <style>
+        .pakegambar {
+            background-image: url("{{ asset('img/sea2.jpg') }}");
+        }
 
+    </style>
 </head>
 
 <body id="page-top">
@@ -87,7 +92,7 @@
             </div>
         </div>
     </div>
-
+    @stack('modal')
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>

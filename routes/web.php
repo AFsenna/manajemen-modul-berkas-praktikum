@@ -43,6 +43,10 @@ Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
     Route::get('/dashboard-praktikan', function () {
         return view('praktikan.index');
     });
+
+    Route::get('/berkas-praktikum', function () {
+        return view('berkasPraktikum.index');
+    })->name('berkasPrak');
 });
 
 Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
@@ -54,6 +58,9 @@ Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
     Route::get('/dashboard-aslab', function () {
         return view('aslab.index');
     });
+    Route::get('/penyimpanan-modul', function () {
+        return view('modulPraktikum.penyimpananModul');
+    })->name('penyimpananModul');
 });
 
 // Route::name('aslab.')->group(function () {
