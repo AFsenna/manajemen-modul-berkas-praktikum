@@ -47,4 +47,9 @@
             <i class="fas fa-fw fa-book"></i>
             <span>Verifikasi Modul</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('aslab.verifikasiBerkas') }}">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Verifikasi Berkas</span></a>
+    </li>
 @endif

@@ -55,4 +55,8 @@ Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
     Route::get('/verifikasi-modul', function () {
         return view('modulPraktikum.verifikasiModul');
     })->name('verifikasiModul');
+
+    Route::get('/verifikasi-berkas', function () {
+        return view('berkasPraktikum.verifikasiBerkas');
+    })->name('verifikasiBerkas');
 });
