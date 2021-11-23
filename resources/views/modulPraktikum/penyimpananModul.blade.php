@@ -9,11 +9,11 @@
     <h1 class="h3 text-gray-800">Penyimpanan Modul Praktikum</h1>
 
     <div class="mb-3">
-        <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newBerkas">
+        <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newModul">
             <span class="icon text-white-50">
                 <i class="fas fa-plus"></i>
             </span>
-            <span class="text">Tambah Berkas</span>
+            <span class="text">Tambah Modul</span>
         </button>
     </div>
 
@@ -38,7 +38,8 @@
                             <td>1</td>
                             <td>Pemrograman Terstruktur 2020</td>
                             <td>
-                                <a href="#" class="btn btn-primary">Lihat File</a>
+                                <a href="https://drive.google.com/file/d/1-yrBnyASNaGT0KblKPe8R2gFNB74nKK0/view?usp=sharing"
+                                    target="__blank" class="btn btn-primary">Lihat File</a>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-warning mb-2" data-toggle="modal" data-target="#editBerkas">
@@ -62,12 +63,12 @@
 
 @push('modal')
     <!-- Modal tambah Aplikasi-->
-    <div class="modal fade" id="newBerkas" data-backdrop="static" tabindex="-1" aria-labelledby="newBerkasLabel"
+    <div class="modal fade" id="newModul" data-backdrop="static" tabindex="-1" aria-labelledby="newModulLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newBerkasLabel">Tambah Berkas</h5>
+                    <h5 class="modal-title" id="newModulLabel">Tambah Modul</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -108,7 +109,7 @@
                 <form action="#" method="POST">
                     <div class="modal-body">
                         <div class="form-group">
-                            <span>PDF KRS</span>
+                            <span>PDF Modul</span>
                             <input type="file" name="aplikasi" class="form-control" placeholder="Nama Aplikasi" value="">
                         </div>
                     </div>

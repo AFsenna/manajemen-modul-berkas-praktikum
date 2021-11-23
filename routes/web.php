@@ -35,11 +35,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 //end group auth
 
 Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
-    Route::get('/praktikan', function () {
-        // return view('aslab.index');
-        dd('ini praktikan');
-    });
-
     Route::get('/dashboard-praktikan', function () {
         return view('praktikan.index');
     });
@@ -50,22 +45,14 @@ Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
 });
 
 Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
-    Route::get('/aslab', function () {
-        // return view('aslab.index');
-        dd('ini aslab');
-    });
-
     Route::get('/dashboard-aslab', function () {
         return view('aslab.index');
     });
     Route::get('/penyimpanan-modul', function () {
         return view('modulPraktikum.penyimpananModul');
     })->name('penyimpananModul');
-});
 
-// Route::name('aslab.')->group(function () {
-//     Route::get('/aslab', function () {
-//         // return view('aslab.index');
-//         dd('ini aslab');
-//     });
-// });
+    Route::get('/verifikasi-modul', function () {
+        return view('modulPraktikum.verifikasiModul');
+    })->name('verifikasiModul');
+});

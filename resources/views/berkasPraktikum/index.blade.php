@@ -39,19 +39,46 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Pemrograman Terstruktur 2020</td>
+                            <td style="max-width: 200px">Pemrograman Terstruktur 2020</td>
                             <td>
-                                <img src="{{ asset('img/undraw_rocket.svg') }}" alt="">
+                                <img src="{{ asset('img/contohkwitansi.jpg') }}" width="200px" height="100px" alt="">
                             </td>
                             <td>
-                                <a href="#" class="btn btn-info">Lihat File</a>
+                                <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
+                                    target="__blank" class="btn btn-info">Lihat File</a>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-primary">Lihat File</a>
+                                <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
+                                    target="__blank" class="btn btn-primary">Lihat File</a>
                             </td>
                             <td>
                                 <div class="badge badge-pill badge-success" style="min-width: 100px; font-size:15px">
                                     Disetujui
+                                </div>
+                            </td>
+                            <td>
+                                <center>
+                                    -
+                                </center>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td style="max-width: 200px">Pemrograman Berorientasi Objek 2021</td>
+                            <td>
+                                <img src="{{ asset('img/contohkwitansi.jpg') }}" width="200px" height="100px" alt="">
+                            </td>
+                            <td>
+                                <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
+                                    target="__blank" class="btn btn-info">Lihat File</a>
+                            </td>
+                            <td>
+                                <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
+                                    target="__blank" class="btn btn-primary">Lihat File</a>
+                            </td>
+                            <td>
+                                <div class="badge badge-pill badge-danger" style="min-width: 100px; font-size:15px">
+                                    Belum Disetujui
                                 </div>
                             </td>
                             <td>

@@ -39,7 +39,12 @@
 @elseif (auth()->guard('mahasiswa')->user()->role_id == 1)
     <li class="nav-item">
         <a class="nav-link" href="{{ route('aslab.penyimpananModul') }}">
-            <i class="fas fa-fw fa-books"></i>
+            <i class="fas fa-fw fa-book"></i>
             <span>Penyimpanan Modul</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('aslab.verifikasiModul') }}">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Verifikasi Modul</span></a>
     </li>
 @endif
