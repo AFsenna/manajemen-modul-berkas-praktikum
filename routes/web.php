@@ -37,7 +37,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
     Route::get('/dashboard-praktikan', function () {
         return view('praktikan.index');
-    });
+    })->name('dashboard');
 
     Route::get('/berkas-praktikum', function () {
         return view('berkasPraktikum.index');
@@ -47,7 +47,8 @@ Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
 Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
     Route::get('/dashboard-aslab', function () {
         return view('aslab.index');
-    });
+    })->name('dashboard');
+
     Route::get('/penyimpanan-modul', function () {
         return view('modulPraktikum.penyimpananModul');
     })->name('penyimpananModul');
@@ -55,6 +56,14 @@ Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
     Route::get('/verifikasi-modul', function () {
         return view('modulPraktikum.verifikasiModul');
     })->name('verifikasiModul');
+
+    Route::get('/penyimpanan-berkas', function () {
+        return view('berkasPraktikum.pilihPraktikum');
+    })->name('penyimpananBerkas');
+
+    Route::post('/penyimpanan-berkas', function () {
+        return view('berkasPraktikum.penyimpananBerkas');
+    })->name('penyimpananBerkasNext');
 
     Route::get('/verifikasi-berkas', function () {
         return view('berkasPraktikum.verifikasiBerkas');

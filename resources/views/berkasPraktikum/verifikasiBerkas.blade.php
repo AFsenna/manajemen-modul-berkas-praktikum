@@ -4,12 +4,16 @@
     Verifikasi Berkas Praktikum
 @endsection
 
+@push('css')
+    <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 text-gray-800">Verifikasi Berkas Praktikum</h1>
 
     <div class="mb-3">
-        <button class="btn btn-success btn-icon-split" data-toggle="modal" data-target="#newBerkas">
+        <button class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#newBerkas">
             <span class="icon text-white-50">
                 <i class="fas fa-download"></i>
             </span>
@@ -46,15 +50,17 @@
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
-                                    target="__blank" class="btn btn-info">Lihat File</a>
+                                    target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary">Lihat File</a>
+                                    target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-success mb-2" data-toggle="modal" data-target="#">
-                                    <span class="icon text-white" data-toggle="tooltip" title="Edit Berkas">
+                                    <span class="icon text-white">
                                         Verifikasi
                                     </span>
                                 </button>
@@ -75,11 +81,13 @@
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
-                                    target="__blank" class="btn btn-info">Lihat File</a>
+                                    target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary">Lihat File</a>
+                                    target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-success mb-2" data-toggle="modal" data-target="#">
@@ -101,6 +109,15 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <!-- Page level plugins -->
+    <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
+@endpush
 
 @push('modal')
     <!-- Modal tambah Aplikasi-->

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Penyimpanan Modul Praktikum
+    Jadwal Pembelian Modul
 @endsection
 
 @push('css')
@@ -10,7 +10,7 @@
 
 @section('content')
     <!-- Page Heading -->
-    <h1 class="h3 text-gray-800">Penyimpanan Modul Praktikum</h1>
+    <h1 class="h3 text-gray-800">Jadwal Pembelian Modul Basis Data 2021</h1>
 
     <div class="mb-3">
         <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newModul">

@@ -25,6 +25,7 @@
         }
 
     </style>
+    @stack('css')
 </head>
 
 <body id="page-top">
