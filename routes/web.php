@@ -49,6 +49,10 @@ Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
         return view('aslab.index');
     })->name('dashboard');
 
+    Route::get('/jadwalPembelianModul', function () {
+        return view('modulPraktikum.jadwalPembelian');
+    })->name('pembelianModul');
+
     Route::get('/penyimpanan-modul', function () {
         return view('modulPraktikum.penyimpananModul');
     })->name('penyimpananModul');

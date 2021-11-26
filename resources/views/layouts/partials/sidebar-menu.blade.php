@@ -36,7 +36,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
                 <a class="collapse-item" href="{{ route('aslab.penyimpananModul') }}">Penyimpanan Modul</a>
-                <a class="collapse-item" href="{{ route('aslab.verifikasiModul') }}">Jadwal Pembelian</a>
+                <a class="collapse-item" href="{{ route('aslab.pembelianModul') }}">Jadwal Pembelian</a>
                 <a class="collapse-item" href="{{ route('aslab.verifikasiModul') }}">Verif Pembelian Modul</a>
             </div>
         </div>

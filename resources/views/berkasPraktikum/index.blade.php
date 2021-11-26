@@ -49,11 +49,13 @@
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
-                                    target="__blank" class="btn btn-info">Lihat File</a>
+                                    target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary">Lihat File</a>
+                                    target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <div class="badge badge-pill badge-success" style="min-width: 100px; font-size:15px">
@@ -74,11 +76,13 @@
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
-                                    target="__blank" class="btn btn-info">Lihat File</a>
+                                    target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary">Lihat File</a>
+                                    target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
+                                        class="fa fa-eye"></i></a>
                             </td>
                             <td>
                                 <div class="badge badge-pill badge-danger" style="min-width: 100px; font-size:15px">

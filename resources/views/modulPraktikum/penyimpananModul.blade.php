@@ -95,6 +95,9 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <input type="number" name="berkas" class="form-control" id="berkas" placeholder="Harga Modul">
+                        </div>
+                        <div class="form-group">
                             <input type="file" name="berkas" class="form-control" id="berkas" placeholder="Nama Aplikasi">
                         </div>
                     </div>
@@ -121,6 +124,9 @@
                 </div>
                 <form action="#" method="POST">
                     <div class="modal-body">
+                        <div class="form-group">
+                            <input type="number" name="berkas" class="form-control" id="berkas" placeholder="Harga Modul">
+                        </div>
                         <div class="form-group">
                             <span>PDF Modul</span>
                             <input type="file" name="aplikasi" class="form-control" placeholder="Nama Aplikasi" value="">
