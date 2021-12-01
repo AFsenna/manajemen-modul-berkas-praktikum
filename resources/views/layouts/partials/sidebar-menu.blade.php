@@ -1,8 +1,8 @@
 <!-- Nav Item - Dashboard -->
 <li class="nav-item">
-    @if (auth()->guard('mahasiswa')->user()->role_id == 1)
-        <a class="nav-link" href="{{ route('aslab.dashboard') }}">
-        @elseif (auth()->guard('mahasiswa')->user()->role_id == 2)
+    @if (auth()->user()->role == 0)
+        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+        @elseif (auth()->user()->role == 1)
             <a class="nav-link" href="{{ route('praktikan.dashboard') }}">
     @endif
     <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -17,14 +17,14 @@
     Menu
 </div>
 
-@if (auth()->guard('mahasiswa')->user()->role_id == 2)
+@if (auth()->user()->role == 1)
     <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('praktikan.berkasPrak') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Berkas Praktikum</span></a>
     </li>
-@elseif (auth()->guard('mahasiswa')->user()->role_id == 1)
+@elseif (auth()->user()->role == 0)
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
@@ -35,9 +35,9 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
-                <a class="collapse-item" href="{{ route('aslab.penyimpananModul') }}">Penyimpanan Modul</a>
-                <a class="collapse-item" href="{{ route('aslab.pembelianModul') }}">Jadwal Pembelian</a>
-                <a class="collapse-item" href="{{ route('aslab.verifikasiModul') }}">Verif Pembelian Modul</a>
+                <a class="collapse-item" href="{{ route('admin.penyimpananModul') }}">Penyimpanan Modul</a>
+                <a class="collapse-item" href="{{ route('admin.pembelianModul') }}">Jadwal Pembelian</a>
+                <a class="collapse-item" href="{{ route('admin.verifikasiModul') }}">Verif Pembelian Modul</a>
             </div>
         </div>
     </li>
@@ -51,8 +51,8 @@
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
-                <a class="collapse-item" href="{{ route('aslab.penyimpananBerkas') }}">Penyimpanan Berkas</a>
-                <a class="collapse-item" href="{{ route('aslab.verifikasiBerkas') }}">Verif Berkas</a>
+                <a class="collapse-item" href="{{ route('admin.penyimpananBerkas') }}">Penyimpanan Berkas</a>
+                <a class="collapse-item" href="{{ route('admin.verifikasiBerkas') }}">Verif Berkas</a>
             </div>
         </div>
     </li>

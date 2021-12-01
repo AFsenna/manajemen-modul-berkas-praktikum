@@ -16,42 +16,17 @@ class CekLogin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$roles)
+    public function handle(Request $request, Closure $next, ...$role)
     {
-        foreach ($roles as $key => $row) {
-            if (Auth::guard('mahasiswa')->user()) {
-                if ($row == "aslab") {
-                    $cek = false;
-                    foreach ($roles as $key => $aslab) {
-                        //1 = aslab
-                        if (Auth::guard('mahasiswa')->user()->role_id == 1) {
-                            $cek = true;
-                        }
-                    }
-                }
-
-                if ($row == "praktikan") {
-                    $cek = false;
-                    foreach ($roles as $key => $aslab) {
-                        //2 = praktikan
-                        if (Auth::guard('mahasiswa')->user()->role_id == 2) {
-                            $cek = true;
-                        }
-                    }
-                }
-
-                if ($cek) {
-                    return $next($request);
-                } else {
-                    abort(403, 'Anda tidak diberikan ijin akses halaman ini');
-                }
-            }
+        if (in_array($request->user()->role, $role)) {
+            return $next($request);
         }
 
-        foreach ($roles as $row) {
-            if ($row == 'aslab' || $row == 'praktikan') {
-                return redirect()->route('auth.login');
-            }
+        // 0 admin | 1 praktikan
+        if ($request->user()->role == 0) {
+            return redirect()->route('admin.auth.login');
+        } else if ($request->user()->role == 1) {
+            dd('praktikan');
         }
     }
 }

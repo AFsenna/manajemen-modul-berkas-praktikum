@@ -1,9 +1,13 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+// use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\admin\{
+    AuthController as AuthControllerAdmin,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +32,9 @@ Route::get('/', function () {
     return redirect()->route('auth.login');
 });
 
-//group auth
-Route::get('/login', [AuthController::class, 'index'])->name('auth.login');
-Route::post('/login', [AuthController::class, 'store'])->name('auth.store');
-Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+//group auth admin
+Route::resource('/login', AuthControllerAdmin::class);
+Route::get('/logout', [AuthControllerAdmin::class, 'logout'])->name('auth.logout');
 //end group auth
 
 Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
@@ -44,8 +47,8 @@ Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
     })->name('berkasPrak');
 });
 
-Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
-    Route::get('/dashboard-aslab', function () {
+Route::middleware(['role:admin'])->name('admin.')->group(function () {
+    Route::get('/dashboard-admin', function () {
         return view('aslab.index');
     })->name('dashboard');
 
@@ -61,13 +64,15 @@ Route::middleware(['role:aslab'])->name('aslab.')->group(function () {
         return view('modulPraktikum.verifikasiModul');
     })->name('verifikasiModul');
 
+    //group route penyimpanan berkas
     Route::get('/penyimpanan-berkas', function () {
         return view('berkasPraktikum.pilihPraktikum');
     })->name('penyimpananBerkas');
 
     Route::post('/penyimpanan-berkas', function () {
         return view('berkasPraktikum.penyimpananBerkas');
-    })->name('penyimpananBerkasNext');
+    });
+    //endgroup
 
     Route::get('/verifikasi-berkas', function () {
         return view('berkasPraktikum.verifikasiBerkas');

@@ -40,12 +40,6 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
-        // New Auth
-        'mahasiswa' => [
-            'driver' => 'session',
-            'provider' => 'mahasiswa',
-        ],
     ],
 
     /*
@@ -75,12 +69,6 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-
-        // New Auth
-        'mahasiswa' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Mahasiswa::class,
-        ],
     ],
 
     /*
