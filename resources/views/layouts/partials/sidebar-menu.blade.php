@@ -35,7 +35,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
-                <a class="collapse-item" href="{{ route('admin.penyimpananModul') }}">Penyimpanan Modul</a>
+                <a class="collapse-item" href="/penyimpanan-modul">Penyimpanan Modul</a>
                 <a class="collapse-item" href="{{ route('admin.pembelianModul') }}">Jadwal Pembelian</a>
                 <a class="collapse-item" href="{{ route('admin.verifikasiModul') }}">Verif Pembelian Modul</a>
             </div>

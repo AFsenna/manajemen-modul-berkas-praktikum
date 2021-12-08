@@ -25,6 +25,9 @@
         }
 
     </style>
+
+    <link rel="stylesheet" href="{{ asset('node_modules/izitoast/dist/css/iziToast.min.css') }}">
+
     @stack('css')
 </head>
 
@@ -105,8 +108,38 @@
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
+    <script src="{{ asset('node_modules/izitoast/dist/js/iziToast.min.js') }}"></script>
+    <script src="{{ asset('js/page/modules-sweetalert.js') }}"></script>
+    <script src="{{ asset('node_modules/sweetalert/dist/sweetalert.min.js') }}"></script>
+
     @stack('js')
 
+    {{-- Message Toast --}}
+    @include('layouts.partials.toastMessage')
+
+    <script>
+        function hapus(id) {
+            // e.preventDefault(); // prevent form 
+            swal({
+                    title: 'Apakah Anda Yakin ?',
+                    text: 'Jika terhapus, maka data tidak dapat di kembalikan !',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $('#form-delete-' + id).submit();
+                    } else {
+                        swal("Cancelled", "Tidak jadi hapus data :)", "error");
+                    }
+                });
+        }
+
+        function simpan() {
+            $('#card').addClass('card card-progress');
+        }
+    </script>
 </body>
 
 </html>

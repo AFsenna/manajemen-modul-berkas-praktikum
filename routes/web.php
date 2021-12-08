@@ -1,12 +1,18 @@
 <?php
 
-// use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Artisan;
 // use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\admin\{
     AuthController as AuthControllerAdmin,
+    DashboardController as DashboardControllerAdmin,
+    modul\PenyimpananModulController as PenyimpananModulControllerAdmin,
+};
+
+use App\Http\Controllers\praktikan\{
+    AuthController as AuthControllerPraktikan,
+    DashboardController as DashboardControllerPraktikan,
 };
 
 /*
@@ -29,18 +35,21 @@ Route::get('clear-all', function () {
 });
 
 Route::get('/', function () {
-    return redirect()->route('auth.login');
+    return redirect('/login-praktikan');
 });
 
 //group auth admin
-Route::resource('/login', AuthControllerAdmin::class);
-Route::get('/logout', [AuthControllerAdmin::class, 'logout'])->name('auth.logout');
+Route::resource('/login-admin', AuthControllerAdmin::class);
+Route::get('/logout-admin', [AuthControllerAdmin::class, 'logout'])->name('auth.logout');
+//end group auth
+
+//group auth admin
+Route::resource('/login-praktikan', AuthControllerPraktikan::class);
+Route::get('/logout-praktikan', [AuthControllerPraktikan::class, 'logout'])->name('auth.logout');
 //end group auth
 
 Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
-    Route::get('/dashboard-praktikan', function () {
-        return view('praktikan.index');
-    })->name('dashboard');
+    Route::get('/dashboard-praktikan', DashboardControllerPraktikan::class)->name('dashboard');
 
     Route::get('/berkas-praktikum', function () {
         return view('berkasPraktikum.index');
@@ -48,20 +57,16 @@ Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
 });
 
 Route::middleware(['role:admin'])->name('admin.')->group(function () {
-    Route::get('/dashboard-admin', function () {
-        return view('aslab.index');
-    })->name('dashboard');
+    Route::get('/dashboard-admin', DashboardControllerAdmin::class)->name('dashboard');
 
-    Route::get('/jadwalPembelianModul', function () {
-        return view('modulPraktikum.jadwalPembelian');
+    Route::resource('penyimpanan-modul', PenyimpananModulControllerAdmin::class);
+
+    Route::get('/pembelian-modul', function () {
+        return view('admin.modulPraktikum.pembelianModul');
     })->name('pembelianModul');
 
-    Route::get('/penyimpanan-modul', function () {
-        return view('modulPraktikum.penyimpananModul');
-    })->name('penyimpananModul');
-
     Route::get('/verifikasi-modul', function () {
-        return view('modulPraktikum.verifikasiModul');
+        return view('admin.modulPraktikum.verifikasiModul');
     })->name('verifikasiModul');
 
     //group route penyimpanan berkas

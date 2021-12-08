@@ -15,13 +15,13 @@
                         <div class="col-lg">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Login Admin</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Login Praktikan</h1>
                                 </div>
                                 <form class="user" method="POST">
                                     @csrf
                                     <div class="form-group">
-                                        <input type="npm" class="form-control form-control-user" aria-describedby="npmHelp"
-                                            name="npm" placeholder="Enter NPM...">
+                                        <input id="npm" type="text" class="form-control form-control-user" name="npm"
+                                            tabindex="1" placeholder="Input NPM" required autofocus>
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user"

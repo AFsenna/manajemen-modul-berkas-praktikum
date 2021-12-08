@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\praktikan;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -24,7 +24,7 @@ class AuthController extends Controller
                 return redirect()->route('praktikan.dashboard')->with(['jenis' => 'warning', 'pesan' => 'Silahkan logout dahulu jika ingin ke halaman login!']);
             }
         }
-        return view('auth.loginAdmin');
+        return view('auth.loginPraktikan');
     }
 
     /**
@@ -34,6 +34,7 @@ class AuthController extends Controller
      */
     public function create()
     {
+        //
     }
 
     /**
@@ -45,13 +46,13 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $client = new Client();
-        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/login-admin', [
+        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/login-praktikan', [
             'headers' => [
                 'Content-Type' => 'application/json'
             ],
             'body' => json_encode(
                 [
-                    'username' => $request->username,
+                    'npm' => $request->npm,
                     'password' => $request->password,
                 ]
             )
@@ -60,20 +61,20 @@ class AuthController extends Controller
         $decodeResponse = json_decode($response->getBody()->getContents());
         if ($decodeResponse->status != "failed") {
             $data =  $decodeResponse->users;
-            $admin = User::where('role', 0)->where('credential', $data[2])->first();
-            if (is_null($admin)) {
-                $admin = User::create([
+            $praktikan = User::where('role', 1)->where('credential', $data[0])->first();
+            if (is_null($praktikan)) {
+                $praktikan = User::create([
                     'role' => 0,
-                    'credential' => $data[2],
-                    'name' => ucfirst($data[0]),
+                    'credential' => $data[0],
+                    'name' => ucfirst($data[1]),
                 ]);
-                Auth::login($admin);
+                Auth::login($praktikan);
             } else {
-                Auth::login($admin);
+                Auth::login($praktikan);
             }
-            return redirect('/dashboard-admin');
+            return redirect()->route('praktikan.dashboard');
         } else {
-            return redirect('/login-admin')->with(['jenis' => 'error', 'pesan' => 'Gagal Login!']);
+            return redirect('login-praktikan')->with(['jenis' => 'error', 'pesan' => 'Gagal Login!']);
         }
     }
 
@@ -126,6 +127,6 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        return redirect('/login-admin');
+        return redirect('/login-praktikan');
     }
 }
