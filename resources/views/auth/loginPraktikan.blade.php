@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('title')
-    Login Admin
+    Login Praktikan
 @endsection
 
 @section('content')

@@ -14,6 +14,7 @@ use App\Http\Controllers\praktikan\{
     AuthController as AuthControllerPraktikan,
     DashboardController as DashboardControllerPraktikan,
 };
+use Illuminate\Http\Client\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,7 @@ Route::resource('/login-admin', AuthControllerAdmin::class);
 Route::get('/logout-admin', [AuthControllerAdmin::class, 'logout'])->name('auth.logout');
 //end group auth
 
-//group auth admin
+//group auth praktikan
 Route::resource('/login-praktikan', AuthControllerPraktikan::class);
 Route::get('/logout-praktikan', [AuthControllerPraktikan::class, 'logout'])->name('auth.logout');
 //end group auth

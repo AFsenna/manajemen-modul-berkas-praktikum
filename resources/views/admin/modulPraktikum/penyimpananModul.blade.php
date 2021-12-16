@@ -86,19 +86,21 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <select name="media_id" id="media_id" class="form-control">
+                            <select name="praktikum_name" id="media_id" class="form-control">
                                 <option value="" disabled selected>-- Pilih Praktikum --</option>
                                 <option value="1">Basis Data 2021</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="number" name="berkas" class="form-control" id="berkas" placeholder="Harga Modul">
+                            <input type="number" name="harga" class="form-control" id="harga" placeholder="Harga Modul">
                         </div>
                         <div class="form-group">
-                            <input type="file" name="berkas" class="form-control" id="berkas" placeholder="Nama Aplikasi">
+                            <input type="file" name="berkas" class="form-control" id="berkasmodul"
+                                placeholder="Berkas Modul">
                         </div>
                     </div>
                     <div class="modal-footer">

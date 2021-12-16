@@ -24,9 +24,9 @@ class CekLogin
 
         // 0 admin | 1 praktikan
         if ($request->user()->role == 0) {
-            return redirect()->route('admin.auth.login');
+            return redirect("/login-admin");
         } else if ($request->user()->role == 1) {
-            dd('praktikan');
+            return redirect("/login-praktikan");
         }
     }
 }
