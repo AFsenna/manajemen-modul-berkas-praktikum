@@ -63,7 +63,7 @@ Route::middleware(['role:admin'])->name('admin.')->group(function () {
     Route::resource('penyimpanan-modul', PenyimpananModulControllerAdmin::class);
 
     Route::get('/pembelian-modul', function () {
-        return view('admin.modulPraktikum.pembelianModul');
+        return view('admin.modulPraktikum.jadwalPembelian');
     })->name('pembelianModul');
 
     Route::get('/verifikasi-modul', function () {
