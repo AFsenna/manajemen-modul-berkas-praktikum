@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin\modul;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PenyimpananModulController extends Controller
 {
@@ -35,7 +36,10 @@ class PenyimpananModulController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->file("berkas")->store("", "google"));
+        $username = auth()->user()->name;
+        Storage::disk("google")->putFileAs("", $request->file("berkas"), "$username");
+        return redirect('/penyimpanan-modul')->with(['jenis' => 'success', 'pesan' => 'Modul Berhasil Disimpan!']);
+        // dd($request->file("berkas")->store("", "google"));
     }
 
     /**
@@ -46,7 +50,13 @@ class PenyimpananModulController extends Controller
      */
     public function show($id)
     {
-        //
+        $files = Storage::disk("google")->allFiles();
+        $firstFileName = $files[0];
+        dump("File Name : " . $firstFileName);
+        $details = Storage::disk('google')->getMetaData($firstFileName);
+        dump($details);
+        $url = Storage::disk('google')->url($firstFileName);
+        dump("Download URL :" . $url);
     }
 
     /**

@@ -42,8 +42,8 @@
                             <td>1</td>
                             <td>Pemrograman Terstruktur 2020</td>
                             <td>
-                                <a href="https://drive.google.com/file/d/1-yrBnyASNaGT0KblKPe8R2gFNB74nKK0/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary">Lihat File</a>
+                                <a href="{{ route('admin.penyimpanan-modul.show', 1) }}" target="__blank"
+                                    class="btn btn-primary">Lihat File</a>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-warning mb-2" data-toggle="modal" data-target="#editBerkas">
