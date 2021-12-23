@@ -17,7 +17,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Silahkan Pilih Praktikum Dahulu</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('aslab.penyimpananBerkas') }}" method="POST">
+            <form action="{{ route('admin.penyimpananBerkas') }}" method="POST">
                 @csrf
                 <div class="body">
                     <div class="form-group">

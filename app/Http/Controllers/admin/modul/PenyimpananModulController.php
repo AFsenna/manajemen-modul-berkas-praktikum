@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin\modul;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use GuzzleHttp\Client;
 
 class PenyimpananModulController extends Controller
 {
@@ -15,7 +16,14 @@ class PenyimpananModulController extends Controller
      */
     public function index()
     {
-        return view('admin.modulPraktikum.penyimpananModul');
+        $client = new Client();
+        $key = date("Ymd");
+        $id = auth()->user()->credential;
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAllPraktikum?id=$id&key=$key");
+        $decodeResponse = json_decode($response->getBody()->getContents());
+        // dd($decodeResponse);
+
+        return view('admin.modulPraktikum.penyimpananModul', ['praktikum' => $decodeResponse]);
     }
 
     /**

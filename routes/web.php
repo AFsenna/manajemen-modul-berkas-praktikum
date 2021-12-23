@@ -15,6 +15,7 @@ use App\Http\Controllers\praktikan\{
     DashboardController as DashboardControllerPraktikan,
 };
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,14 @@ Route::get('/', function () {
     return redirect('/login-praktikan');
 });
 
+Route::get('/logout', function () {
+    return Auth::logout();
+});
+Route::get('/tes', function () {
+    dd(Auth::user());
+});
+
+
 //group auth admin
 Route::resource('/login-admin', AuthControllerAdmin::class);
 Route::get('/logout-admin', [AuthControllerAdmin::class, 'logout'])->name('auth.logout');
@@ -49,7 +58,7 @@ Route::resource('/login-praktikan', AuthControllerPraktikan::class);
 Route::get('/logout-praktikan', [AuthControllerPraktikan::class, 'logout'])->name('auth.logout');
 //end group auth
 
-Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
+Route::middleware(['role:1'])->name('praktikan.')->group(function () {
     Route::get('/dashboard-praktikan', DashboardControllerPraktikan::class)->name('dashboard');
 
     Route::get('/berkas-praktikum', function () {
@@ -57,7 +66,7 @@ Route::middleware(['role:praktikan'])->name('praktikan.')->group(function () {
     })->name('berkasPrak');
 });
 
-Route::middleware(['role:admin'])->name('admin.')->group(function () {
+Route::middleware(['role:0'])->name('admin.')->group(function () {
     Route::get('/dashboard-admin', DashboardControllerAdmin::class)->name('dashboard');
 
     Route::resource('penyimpanan-modul', PenyimpananModulControllerAdmin::class);

@@ -6,6 +6,8 @@
 
 @push('css')
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('node_modules/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('node_modules/selectric/public/selectric.css') }}">
 @endpush
 
 @section('content')
@@ -51,7 +53,8 @@
                                         <i class="fas fa-fw fa-edit"></i>
                                     </span>
                                 </button>
-                                <a href="#" class="btn btn-sm btn-danger mb-2" data-toggle="tooltip" title="Hapus Berkas">
+                                <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
+                                    title="Hapus Berkas">
                                     <span class="icon text-white">
                                         <i class="fas fa-fw fa-trash"></i>
                                     </span>
@@ -72,6 +75,20 @@
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
+
+    <script src="{{ asset('node_modules/cleave.js/dist/cleave.min.js') }}"></script>
+    <script src="{{ asset('node_modules/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('node_modules/selectric/public/jquery.selectric.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+            var cleaveC = new Cleave('.currency', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand'
+            });
+        });
+    </script>
 @endpush
 
 @push('modal')
@@ -90,13 +107,17 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <select name="praktikum_name" id="media_id" class="form-control">
+                            <select name="praktikum_name" id="media_id" class="form-control select2" style="width: 100%">
                                 <option value="" disabled selected>-- Pilih Praktikum --</option>
-                                <option value="1">Basis Data 2021</option>
+                                @foreach ($praktikum as $prak)
+                                    <option value="{{ $prak->id }}">
+                                        {{ $prak->nama . ' ' . $prak->tahun }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="number" name="harga" class="form-control" id="harga" placeholder="Harga Modul">
+                            <input type="text" name="harga" class="form-control currency" id="harga"
+                                placeholder="Harga Modul">
                         </div>
                         <div class="form-group">
                             <input type="file" name="berkas" class="form-control" id="berkasmodul"

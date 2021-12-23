@@ -95,7 +95,8 @@
                                         <i class="fas fa-fw fa-edit"></i>
                                     </span>
                                 </button>
-                                <a href="#" class="btn btn-sm btn-danger mb-2" data-toggle="tooltip" title="Hapus Berkas">
+                                <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
+                                    title="Hapus Berkas">
                                     <span class="icon text-white">
                                         <i class="fas fa-fw fa-trash"></i>
                                     </span>

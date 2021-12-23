@@ -64,7 +64,7 @@ class AuthController extends Controller
             $praktikan = User::where('role', 1)->where('credential', $data[0])->first();
             if (is_null($praktikan)) {
                 $praktikan = User::create([
-                    'role' => 0,
+                    'role' => 1,
                     'credential' => $data[0],
                     'name' => ucfirst($data[1]),
                 ]);

@@ -18,15 +18,18 @@ class CekLogin
      */
     public function handle(Request $request, Closure $next, ...$role)
     {
-        if (in_array($request->user()->role, $role)) {
-            return $next($request);
-        }
 
-        // 0 admin | 1 praktikan
-        if ($request->user()->role == 0) {
-            return redirect("/login-admin");
-        } else if ($request->user()->role == 1) {
-            return redirect("/login-praktikan");
+        if (!is_null(Auth::user())) {
+            if (in_array(Auth::user()->role, $role)) {
+                return $next($request);
+            }
         }
+        return redirect("/login-praktikan");
+
+        // // 0 admin | 1 praktikan
+        // if ($request->user()->role == 0) {
+        //     return redirect("/login-admin");
+        // } else if ($request->user()->role == 1) {
+        // }
     }
 }
