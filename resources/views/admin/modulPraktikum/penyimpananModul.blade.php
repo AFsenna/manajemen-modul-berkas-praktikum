@@ -23,9 +23,6 @@
         </div>
     @endif
 
-    {{-- @error('harga') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
-    @error('berkas') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
-    @error('praktikum_name') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror --}}
 
     <div class="mb-3">
         <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newModul">
@@ -68,12 +65,20 @@
                                             <i class="fas fa-fw fa-edit"></i>
                                         </span>
                                     </button>
-                                    <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
+                                    <form action="{{ route('admin.penyimpanan-modul.destroy', 1) }}" method="POST"
+                                        class="d-inline" id="form-delete-{{ 1 }}">
+                                        @method('delete')
+                                        @csrf
+                                        <button type="button" class="btn btn-danger" onclick="hapus({{ 1 }})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    {{-- <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
                                         title="Hapus Berkas">
                                         <span class="icon text-white">
                                             <i class="fas fa-fw fa-trash"></i>
                                         </span>
-                                    </a>
+                                    </a> --}}
                                 </td>
                             </tr>
                         @endforeach

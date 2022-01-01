@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\PenyimpananModul;
+use Stringable;
 
 class PenyimpananModulController extends Controller
 {
@@ -70,8 +71,10 @@ class PenyimpananModulController extends Controller
             DB::commit();
             Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
             $files = Storage::disk("google")->allFiles();
+            // dd($pmodul->id_pmodul);
             $id = $pmodul->id_pmodul;
             $firstFileName = $files[$id - 1];
+            Storage::disk("google")->setVisibility($firstFileName, 'private');
             $url = Storage::disk('google')->url($firstFileName);
 
             $update = PenyimpananModul::find($id);
@@ -135,6 +138,12 @@ class PenyimpananModulController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Storage::disk("google")->makeDirectory("michael");
+        $dirs = Storage::disk("google")->directories();
+        $files = Storage::disk("google")->allFiles();
+        $firstDir = $files[0];
+        $deleted = Storage::disk("google")->deleteDirectory($firstDir);
+        $deleted = Storage::disk("google")->delete($firstDir);
+        dd($dirs);
     }
 }
