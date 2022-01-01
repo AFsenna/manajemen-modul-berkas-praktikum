@@ -19,9 +19,9 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             if (auth()->user()->role == 0) {
-                return redirect()->route('admin.dashboard')->with(['jenis' => 'warning', 'pesan' => 'Silahkan logout dahulu jika ingin ke halaman login!']);
+                return redirect()->route('admin.dashboard')->with(['jenis' => 'warning', 'pesan' => 'Silahkan logout dahulu jika ingin ke halaman login Admin!']);
             } else if (auth()->user()->role == 1) {
-                return redirect()->route('praktikan.dashboard')->with(['jenis' => 'warning', 'pesan' => 'Silahkan logout dahulu jika ingin ke halaman login!']);
+                return redirect()->route('praktikan.dashboard')->with(['jenis' => 'warning', 'pesan' => 'Silahkan logout dahulu jika ingin ke halaman login Praktikan!']);
             }
         }
         return view('auth.loginPraktikan');

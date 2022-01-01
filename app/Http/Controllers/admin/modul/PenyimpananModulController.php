@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\PenyimpananModul;
 
 class PenyimpananModulController extends Controller
 {
@@ -23,7 +26,8 @@ class PenyimpananModulController extends Controller
         $decodeResponse = json_decode($response->getBody()->getContents());
         // dd($decodeResponse);
 
-        return view('admin.modulPraktikum.penyimpananModul', ['praktikum' => $decodeResponse]);
+        $pmodul = PenyimpananModul::get()->where('credential', $id);
+        return view('admin.modulPraktikum.penyimpananModul', ['praktikum' => $decodeResponse, 'modul' => $pmodul]);
     }
 
     /**
@@ -44,9 +48,49 @@ class PenyimpananModulController extends Controller
      */
     public function store(Request $request)
     {
-        $username = auth()->user()->name;
-        Storage::disk("google")->putFileAs("", $request->file("berkas"), "$username");
-        return redirect('/penyimpanan-modul')->with(['jenis' => 'success', 'pesan' => 'Modul Berhasil Disimpan!']);
+        $this->validate($request, [
+            'nama_praktikum' => 'required|unique:penyimpanan_modul,nama_praktikum',
+            'file_modul' => 'required',
+            'harga_modul' => 'required'
+        ]);
+        try {
+            Log::info('Request simpan data modul = ' . json_encode($request->all()));
+            Log::info("Data User = " . json_encode(auth()->user()));
+            Log::info('Start');
+
+
+            DB::beginTransaction();
+            $pmodul =  PenyimpananModul::create([
+                'nama_praktikum' => $request->nama_praktikum,
+                'harga' => $request->harga_modul,
+                'urlberkas' => '#',
+                'credential' => auth()->user()->credential,
+            ]);
+            Log::info("Data modul pertama = " . json_encode($pmodul));
+            DB::commit();
+            Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
+            $files = Storage::disk("google")->allFiles();
+            $id = $pmodul->id_pmodul;
+            $firstFileName = $files[$id - 1];
+            $url = Storage::disk('google')->url($firstFileName);
+
+            $update = PenyimpananModul::find($id);
+
+            $pmodul = $update->update([
+                'urlberkas' => $url,
+            ]);
+            DB::commit();
+            Log::info("Data modul final = " . json_encode($pmodul));
+
+            return redirect('/penyimpanan-modul')->with(['jenis' => 'success', 'pesan' => 'Modul Berhasil Disimpan!']);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("Error simpan data modul = " . $exception->getMessage());
+            Log::error("Error simpan data modul = " . $exception->getFile());
+            Log::error("Error simpan data modul = " . $exception->getTraceAsString());
+
+            return redirect('/penyimpanan-modul')->with(['jenis' => 'error', 'pesan' => 'Modul Gagal Disimpan!']);
+        }
         // dd($request->file("berkas")->store("", "google"));
     }
 
@@ -58,13 +102,6 @@ class PenyimpananModulController extends Controller
      */
     public function show($id)
     {
-        $files = Storage::disk("google")->allFiles();
-        $firstFileName = $files[0];
-        dump("File Name : " . $firstFileName);
-        $details = Storage::disk('google')->getMetaData($firstFileName);
-        dump($details);
-        $url = Storage::disk('google')->url($firstFileName);
-        dump("Download URL :" . $url);
     }
 
     /**

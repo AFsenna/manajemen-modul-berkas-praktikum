@@ -13,6 +13,19 @@
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 text-gray-800">Penyimpanan Modul Praktikum</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- @error('harga') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
+    @error('berkas') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
+    @error('praktikum_name') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror --}}
 
     <div class="mb-3">
         <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newModul">
@@ -40,27 +53,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Pemrograman Terstruktur 2020</td>
-                            <td>
-                                <a href="{{ route('admin.penyimpanan-modul.show', 1) }}" target="__blank"
-                                    class="btn btn-primary">Lihat File</a>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-warning mb-2" data-toggle="modal" data-target="#editBerkas">
-                                    <span class="icon text-white" data-toggle="tooltip" title="Edit Berkas">
-                                        <i class="fas fa-fw fa-edit"></i>
-                                    </span>
-                                </button>
-                                <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
-                                    title="Hapus Berkas">
-                                    <span class="icon text-white">
-                                        <i class="fas fa-fw fa-trash"></i>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
+                        @foreach ($modul as $row)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $row->nama_praktikum }}</td>
+                                <td>
+                                    <a href="{{ $row->urlberkas }}" target="__blank" class="btn btn-primary">Lihat
+                                        File</a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning mb-2" data-toggle="modal"
+                                        data-target="#editBerkas">
+                                        <span class="icon text-white" data-toggle="tooltip" title="Edit Berkas">
+                                            <i class="fas fa-fw fa-edit"></i>
+                                        </span>
+                                    </button>
+                                    <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
+                                        title="Hapus Berkas">
+                                        <span class="icon text-white">
+                                            <i class="fas fa-fw fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -107,20 +123,20 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <select name="praktikum_name" id="media_id" class="form-control select2" style="width: 100%">
+                            <select name="nama_praktikum" id="media_id" class="form-control select2" style="width: 100%">
                                 <option value="" disabled selected>-- Pilih Praktikum --</option>
                                 @foreach ($praktikum as $prak)
-                                    <option value="{{ $prak->id }}">
+                                    <option value="{{ $prak->nama . ' ' . $prak->tahun }}">
                                         {{ $prak->nama . ' ' . $prak->tahun }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="harga" class="form-control currency" id="harga"
+                            <input type="text" name="harga_modul" class="form-control currency" id="harga"
                                 placeholder="Harga Modul">
                         </div>
                         <div class="form-group">
-                            <input type="file" name="berkas" class="form-control" id="berkasmodul"
+                            <input type="file" name="file_modul" class="form-control" id="berkasmodul"
                                 placeholder="Berkas Modul">
                         </div>
                     </div>

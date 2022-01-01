@@ -11,6 +11,7 @@
 
     <title>MMBP - @yield('title')</title>
 
+    <link href="{{ asset('img/mmbp.png') }}" rel='shorcut icon'>
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
