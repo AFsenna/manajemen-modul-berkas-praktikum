@@ -18,7 +18,8 @@ class PenyimpananModul extends Migration
             $table->string('credential');
             $table->string('nama_praktikum')->unique();
             $table->bigInteger('harga');
-            $table->string('urlberkas')->nullable();
+            $table->string('urlberkas');
+            $table->string('id_file');
             $table->timestamps();
         });
     }

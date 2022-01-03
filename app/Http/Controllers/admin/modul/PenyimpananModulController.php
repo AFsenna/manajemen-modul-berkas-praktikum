@@ -9,7 +9,6 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\PenyimpananModul;
-use Stringable;
 
 class PenyimpananModulController extends Controller
 {
@@ -20,15 +19,19 @@ class PenyimpananModulController extends Controller
      */
     public function index()
     {
+        $id = auth()->user()->credential;
+        $pmodul = PenyimpananModul::get()->where('credential', $id);
+        return view('admin.modulPraktikum.penyimpananModul', ['modul' => $pmodul]);
+    }
+
+    public function getPraktikumJson()
+    {
         $client = new Client();
         $key = date("Ymd");
         $id = auth()->user()->credential;
         $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAllPraktikum?id=$id&key=$key");
         $decodeResponse = json_decode($response->getBody()->getContents());
-        // dd($decodeResponse);
-
-        $pmodul = PenyimpananModul::get()->where('credential', $id);
-        return view('admin.modulPraktikum.penyimpananModul', ['praktikum' => $decodeResponse, 'modul' => $pmodul]);
+        return response()->json($decodeResponse);
     }
 
     /**
@@ -49,16 +52,24 @@ class PenyimpananModulController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->file('file_modul'));
         $this->validate($request, [
             'nama_praktikum' => 'required|unique:penyimpanan_modul,nama_praktikum',
             'file_modul' => 'required',
             'harga_modul' => 'required'
         ]);
+
         try {
             Log::info('Request simpan data modul = ' . json_encode($request->all()));
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
+            Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
+            $files = Storage::disk("google")->allFiles();
+            // dump($files);
+            // dd(count($files) - 1);
+            $firstFileName = $files[count($files) - 1];
+            $url = Storage::disk('google')->url($firstFileName);
 
             DB::beginTransaction();
             $pmodul =  PenyimpananModul::create([
@@ -66,24 +77,11 @@ class PenyimpananModulController extends Controller
                 'harga' => $request->harga_modul,
                 'urlberkas' => '#',
                 'credential' => auth()->user()->credential,
-            ]);
-            Log::info("Data modul pertama = " . json_encode($pmodul));
-            DB::commit();
-            Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
-            $files = Storage::disk("google")->allFiles();
-            // dd($pmodul->id_pmodul);
-            $id = $pmodul->id_pmodul;
-            $firstFileName = $files[$id - 1];
-            Storage::disk("google")->setVisibility($firstFileName, 'private');
-            $url = Storage::disk('google')->url($firstFileName);
-
-            $update = PenyimpananModul::find($id);
-
-            $pmodul = $update->update([
                 'urlberkas' => $url,
+                'id_file' => $firstFileName,
             ]);
+            Log::info("Data modul baru = " . json_encode($pmodul));
             DB::commit();
-            Log::info("Data modul final = " . json_encode($pmodul));
 
             return redirect('/penyimpanan-modul')->with(['jenis' => 'success', 'pesan' => 'Modul Berhasil Disimpan!']);
         } catch (\Exception $exception) {
@@ -92,9 +90,8 @@ class PenyimpananModulController extends Controller
             Log::error("Error simpan data modul = " . $exception->getFile());
             Log::error("Error simpan data modul = " . $exception->getTraceAsString());
 
-            return redirect('/penyimpanan-modul')->with(['jenis' => 'error', 'pesan' => 'Modul Gagal Disimpan!']);
+            return redirect()->route('admin.penyimpanan-modul.index')->with(['jenis' => 'error', 'pesan' => 'Modul Gagal Disimpan!']);
         }
-        // dd($request->file("berkas")->store("", "google"));
     }
 
     /**
@@ -127,7 +124,17 @@ class PenyimpananModulController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $pmodul = PenyimpananModul::find($id);
+        $this->validate($request, [
+            'nama_praktikum' => "required|unique:penyimpanan_modul,nama_praktikum,$pmodul->id_pmodul,id_pmodul",
+            'file_modul' => 'required',
+            'harga_modul' => 'required'
+        ]);
+
+        $files = Storage::disk("google")->allFiles();
+        $firstFileName = $pmodul->id_file;
+        dump($request->file("file_modul"));
+        dd(Storage::disk("google")->update($firstFileName, $request->file("file_modul")));
     }
 
     /**
@@ -138,12 +145,18 @@ class PenyimpananModulController extends Controller
      */
     public function destroy($id)
     {
-        // Storage::disk("google")->makeDirectory("michael");
-        $dirs = Storage::disk("google")->directories();
-        $files = Storage::disk("google")->allFiles();
-        $firstDir = $files[0];
-        $deleted = Storage::disk("google")->deleteDirectory($firstDir);
-        $deleted = Storage::disk("google")->delete($firstDir);
-        dd($dirs);
+        $pmodul = PenyimpananModul::find($id);
+
+        Log::info('Request data modul yang ingin didelete = ' . json_encode($pmodul));
+        Log::info("Data User = " . json_encode(auth()->user()));
+        Log::info('Start');
+
+        $idFile = $pmodul->id_file;
+        $pmodul->delete();
+        // $deleted = Storage::disk("google")->deleteDirectory($firstDir);
+        $deleted = Storage::disk("google")->delete($idFile);
+        Log::info('Data modul berhasil di delete');
+
+        return redirect()->route('admin.penyimpanan-modul.index')->with(['jenis' => 'success', 'pesan' => 'Berhasil Delete modul']);
     }
 }

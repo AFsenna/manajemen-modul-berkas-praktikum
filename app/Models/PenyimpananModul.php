@@ -12,6 +12,6 @@ class PenyimpananModul extends Model
     public $primaryKey = 'id_pmodul';
 
     protected $fillable = [
-        'nama_praktikum', 'harga', 'urlberkas', 'credential',
+        'nama_praktikum', 'harga', 'urlberkas', 'credential', 'id_file'
     ];
 }

@@ -5,9 +5,9 @@
 @endsection
 
 @push('css')
-    <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('node_modules/select2/dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('node_modules/selectric/public/selectric.css') }}">
+    <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -45,8 +45,9 @@
                         <tr>
                             <th>No</th>
                             <th>Praktikum</th>
+                            <th>Harga Modul</th>
                             <th>PDF Modul</th>
-                            <th style="max-width: 300px;">Aksi</th>
+                            <th style="max-width: 200px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,31 +55,28 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $row->nama_praktikum }}</td>
+                                <td>Rp. {{ number_format($row->harga, 2, ',', '.') }}</td>
                                 <td>
-                                    <a href="{{ $row->urlberkas }}" target="__blank" class="btn btn-primary">Lihat
+                                    <a href="{{ $row->urlberkas }}" target="__blank" class="btn btn-primary"><i
+                                            class="fas fa-eye"></i> Lihat
                                         File</a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning mb-2" data-toggle="modal"
-                                        data-target="#editBerkas">
+                                    <button class="btn btn-warning" data-toggle="modal" data-target="#editBerkas"
+                                        type="button">
                                         <span class="icon text-white" data-toggle="tooltip" title="Edit Berkas">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </span>
                                     </button>
-                                    <form action="{{ route('admin.penyimpanan-modul.destroy', 1) }}" method="POST"
-                                        class="d-inline" id="form-delete-{{ 1 }}">
+                                    <form action="{{ route('admin.penyimpanan-modul.destroy', $row->id_pmodul) }}"
+                                        method="POST" class="d-inline" id="form-delete-{{ $row->id_pmodul }}">
                                         @method('delete')
                                         @csrf
-                                        <button type="button" class="btn btn-danger" onclick="hapus({{ 1 }})">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="hapus({{ $row->id_pmodul }})">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                    {{-- <a href="#" class="btn btn-sm btn-danger mb-2" onclick="hapus()" data-toggle="tooltip"
-                                        title="Hapus Berkas">
-                                        <span class="icon text-white">
-                                            <i class="fas fa-fw fa-trash"></i>
-                                        </span>
-                                    </a> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -97,17 +95,38 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 
-    <script src="{{ asset('node_modules/cleave.js/dist/cleave.min.js') }}"></script>
     <script src="{{ asset('node_modules/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('node_modules/selectric/public/jquery.selectric.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
             $('.select2').select2();
-            var cleaveC = new Cleave('.currency', {
-                numeral: true,
-                numeralThousandsGroupStyle: 'thousand'
+
+            $('#nama_praktikumtambah,#nama_praktikumedit')
+                .find('option')
+                .remove();
+
+            $('#nama_praktikumtambah,#nama_praktikumedit')
+                .find('option')
+                .end()
+                .append(`<option value="" selected disabled> --- Pilih Praktikum ---</option>`)
+
+            $.get(`{{ route('admin.penyimpananModul.getPraktikumJson') }}`, function(data) {
+                $.each(data, function(index, row) {
+                    $('#nama_praktikumtambah,#nama_praktikumedit')
+                        .find('option')
+                        .end()
+                        .append(
+                            `<option value="${row.nama} ${row.tahun}">${row.nama} ${row.tahun}</option>`
+                        )
+                    // console.log(`"${row.nama} ${row.tahun}"`)
+                });
             });
+        });
+
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
         });
     </script>
 @endpush
@@ -128,21 +147,34 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <select name="nama_praktikum" id="media_id" class="form-control select2" style="width: 100%">
-                                <option value="" disabled selected>-- Pilih Praktikum --</option>
+                            <label for="nama_praktikum"> Nama Praktikum</label>
+                            <select name="nama_praktikum" id="nama_praktikumtambah" class="form-control select2"
+                                style="width: 100%; height:100%">
+                                {{-- <option value="" disabled selected>-- Pilih Praktikum --</option>
                                 @foreach ($praktikum as $prak)
                                     <option value="{{ $prak->nama . ' ' . $prak->tahun }}">
                                         {{ $prak->nama . ' ' . $prak->tahun }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="harga_modul" class="form-control currency" id="harga"
-                                placeholder="Harga Modul">
+                            <label for="harga_modul"> Harga Modul</label>
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    Rp
+                                </div>
+                                <input type="number" name="harga_modul" class="form-control" id="harga"
+                                    placeholder="Masukkan Harga Modul">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <input type="file" name="file_modul" class="form-control" id="berkasmodul"
-                                placeholder="Berkas Modul">
+                            <label for="file_modul"> File Modul</label>
+                            {{-- <input type="file" name="file_modul" class="form-control" id="berkasmodul"
+                                placeholder="Berkas Modul"> --}}
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="file_modul" name="file_modul">
+                                <label class="custom-file-label" for="file_modul">Pilih File</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -166,14 +198,40 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST">
+                <form action="{{ route('admin.penyimpanan-modul.update', 1) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('put')
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="number" name="berkas" class="form-control" id="berkas" placeholder="Harga Modul">
+                            <label for="nama_praktikum"> Nama Praktikum</label>
+                            <select name="nama_praktikum" id="nama_praktikumedit" class="form-control select2"
+                                style="width: 100%; height:100%">
+                                {{-- <option value="" disabled selected>-- Pilih Praktikum --</option>
+                                @foreach ($praktikum as $prak)
+                                    <option value="{{ $prak->nama . ' ' . $prak->tahun }}">
+                                        {{ $prak->nama . ' ' . $prak->tahun }}</option>
+                                @endforeach --}}
+                            </select>
                         </div>
                         <div class="form-group">
-                            <span>PDF Modul</span>
-                            <input type="file" name="aplikasi" class="form-control" placeholder="Nama Aplikasi" value="">
+                            <label for="harga_modul"> Harga Modul</label>
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    Rp
+                                </div>
+                                <input type="number" name="harga_modul" class="form-control" id="newharga"
+                                    placeholder="Masukkan Harga Modul">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="file_modul"> File Modul</label>
+                            {{-- <input type="file" name="file_modul" class="form-control" id="berkasmodul"
+                                placeholder="Berkas Modul"> --}}
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="newfile_modul" name="file_modul">
+                                <label class="custom-file-label" for="file_modul">Pilih File</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

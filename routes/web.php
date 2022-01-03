@@ -70,6 +70,7 @@ Route::middleware(['role:0'])->name('admin.')->group(function () {
     Route::get('/dashboard-admin', DashboardControllerAdmin::class)->name('dashboard');
 
     Route::resource('penyimpanan-modul', PenyimpananModulControllerAdmin::class);
+    Route::get('/penyimpananModul/getpraktikum', [PenyimpananModulControllerAdmin::class, 'getPraktikumJson'])->name('penyimpananModul.getPraktikumJson');
 
     Route::get('/pembelian-modul', function () {
         return view('admin.modulPraktikum.jadwalPembelian');
