@@ -20,7 +20,7 @@
 @if (auth()->user()->role == 1)
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('praktikan.berkasPrak') }}">
+        <a class="nav-link" href="{{ route('praktikan.berkas-praktikum.index') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Berkas Praktikum</span></a>
     </li>
@@ -35,7 +35,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
-                <a class="collapse-item" href="/penyimpanan-modul">Penyimpanan Modul</a>
+                <a class="collapse-item" href="{{ route('admin.penyimpanan-modul.index') }}">Penyimpanan Modul</a>
                 <a class="collapse-item" href="{{ route('admin.pembelianModul') }}">Jadwal Pembelian</a>
                 <a class="collapse-item" href="{{ route('admin.verifikasiModul') }}">Verif Pembelian Modul</a>
             </div>
@@ -51,7 +51,7 @@
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
-                <a class="collapse-item" href="{{ route('admin.penyimpananBerkas') }}">Penyimpanan Berkas</a>
+                <a class="collapse-item" href="{{ route('admin.penyimpananBerkas.index') }}">Penyimpanan Berkas</a>
                 <a class="collapse-item" href="{{ route('admin.verifikasiBerkas') }}">Verif Berkas</a>
             </div>
         </div>

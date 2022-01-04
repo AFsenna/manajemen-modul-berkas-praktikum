@@ -57,13 +57,13 @@
                                 <td>{{ $row->nama_praktikum }}</td>
                                 <td>Rp. {{ number_format($row->harga, 2, ',', '.') }}</td>
                                 <td>
-                                    <a href="{{ $row->urlberkas }}" target="__blank" class="btn btn-primary"><i
-                                            class="fas fa-eye"></i> Lihat
+                                    <a href="https://drive.google.com/uc?id={{ $row->id_file }}&export=media"
+                                        target="__blank" class="btn btn-primary"><i class="fas fa-eye"></i> Lihat
                                         File</a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-warning" data-toggle="modal" data-target="#editBerkas"
-                                        type="button">
+                                    <button class="btn btn-warning" data-toggle="modal"
+                                        data-target="#editBerkas{{ $row->id_pmodul }}" type="button">
                                         <span class="icon text-white" data-toggle="tooltip" title="Edit Berkas">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </span>
@@ -172,7 +172,8 @@
                             {{-- <input type="file" name="file_modul" class="form-control" id="berkasmodul"
                                 placeholder="Berkas Modul"> --}}
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="file_modul" name="file_modul">
+                                <input type="file" class="custom-file-input" id="file_modul" accept="application/pdf"
+                                    name="file_modul">
                                 <label class="custom-file-label" for="file_modul">Pilih File</label>
                             </div>
                         </div>
@@ -188,59 +189,68 @@
     <!-- endmodal -->
 
     <!-- Modal edit Aplikasi-->
-    <div class="modal fade" id="editBerkas" data-backdrop="static" tabindex="-1" aria-labelledby="editBerkasLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editBerkasLabel">Edit Berkas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('admin.penyimpanan-modul.update', 1) }}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    @method('put')
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="nama_praktikum"> Nama Praktikum</label>
-                            <select name="nama_praktikum" id="nama_praktikumedit" class="form-control select2"
-                                style="width: 100%; height:100%">
-                                {{-- <option value="" disabled selected>-- Pilih Praktikum --</option>
+    @foreach ($modul as $row)
+        <div class="modal fade" id="editBerkas{{ $row->id_pmodul }}" data-backdrop="static" tabindex="-1"
+            aria-labelledby="editBerkasLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editBerkasLabel">Edit Berkas</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('admin.penyimpanan-modul.update', $row->id_pmodul) }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('put')
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="nama_praktikum"> Nama Praktikum</label>
+                                <select name="nama_praktikum" id="nama_praktikumedit" class="form-control select2"
+                                    style="width: 100%; height:100%">
+                                    {{-- <option value="" disabled selected>-- Pilih Praktikum --</option>
                                 @foreach ($praktikum as $prak)
                                     <option value="{{ $prak->nama . ' ' . $prak->tahun }}">
                                         {{ $prak->nama . ' ' . $prak->tahun }}</option>
                                 @endforeach --}}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="harga_modul"> Harga Modul</label>
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                    Rp
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="harga_modul"> Harga Modul</label>
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        Rp
+                                    </div>
+                                    <input type="number" name="harga_modul" class="form-control" id="newharga"
+                                        placeholder="Masukkan Harga Modul" value="{{ $row->harga }}">
                                 </div>
-                                <input type="number" name="harga_modul" class="form-control" id="newharga"
-                                    placeholder="Masukkan Harga Modul">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="file_modul"> File Modul</label>
-                            {{-- <input type="file" name="file_modul" class="form-control" id="berkasmodul"
+                            <center>
+                                <a href="https://drive.google.com/uc?id={{ $row->id_file }}&export=media"
+                                    target="__blank" class="btn btn-primary"><i class="fas fa-eye"></i> Lihat
+                                    File Modul Sebelumnya</a>
+                            </center>
+                            <div class="form-group mt-3">
+                                <label for="file_modul"> File Modul Baru</label>
+                                {{-- <input type="file" name="file_modul" class="form-control" id="berkasmodul"
                                 placeholder="Berkas Modul"> --}}
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="newfile_modul" name="file_modul">
-                                <label class="custom-file-label" for="file_modul">Pilih File</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="newfile_modul" accept="application/pdf"
+                                        name="file_modul">
+                                    <label class="custom-file-label" for="file_modul">Pilih File</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endforeach
+
     <!-- endmodal -->
 @endpush

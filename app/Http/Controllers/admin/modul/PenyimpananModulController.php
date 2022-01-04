@@ -52,7 +52,6 @@ class PenyimpananModulController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->file('file_modul'));
         $this->validate($request, [
             'nama_praktikum' => 'required|unique:penyimpanan_modul,nama_praktikum',
             'file_modul' => 'required',
@@ -65,20 +64,14 @@ class PenyimpananModulController extends Controller
             Log::info('Start');
 
             Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
-            $files = Storage::disk("google")->allFiles();
-            // dump($files);
-            // dd(count($files) - 1);
-            $firstFileName = $files[count($files) - 1];
-            $url = Storage::disk('google')->url($firstFileName);
+            $result = Storage::disk("google")->getMetadata($request->nama_praktikum);
 
             DB::beginTransaction();
             $pmodul =  PenyimpananModul::create([
                 'nama_praktikum' => $request->nama_praktikum,
                 'harga' => $request->harga_modul,
-                'urlberkas' => '#',
                 'credential' => auth()->user()->credential,
-                'urlberkas' => $url,
-                'id_file' => $firstFileName,
+                'id_file' => $result['path'],
             ]);
             Log::info("Data modul baru = " . json_encode($pmodul));
             DB::commit();
@@ -125,16 +118,44 @@ class PenyimpananModulController extends Controller
     public function update(Request $request, $id)
     {
         $pmodul = PenyimpananModul::find($id);
+
         $this->validate($request, [
             'nama_praktikum' => "required|unique:penyimpanan_modul,nama_praktikum,$pmodul->id_pmodul,id_pmodul",
-            'file_modul' => 'required',
             'harga_modul' => 'required'
         ]);
 
-        $files = Storage::disk("google")->allFiles();
-        $firstFileName = $pmodul->id_file;
-        dump($request->file("file_modul"));
-        dd(Storage::disk("google")->update($firstFileName, $request->file("file_modul")));
+        try {
+            Log::info('Request update data modul berisi = ' . json_encode($pmodul));
+            Log::info("Data User = " . json_encode(auth()->user()));
+            Log::info('Start');
+
+            if ($request->file("file_modul")) {
+                Storage::disk("google")->delete($pmodul->id_file);
+                Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
+                $result = Storage::disk("google")->getMetadata($request->nama_praktikum);
+            } else {
+                $result['path'] = $pmodul->id_file;
+            }
+
+            DB::beginTransaction();
+            $pmodul->update([
+                'nama_praktikum' => $request->nama_praktikum,
+                'harga' => $request->harga_modul,
+                'id_file' => $result['path'],
+            ]);
+
+            Log::info("Data modul setelah diupdate = " . json_encode($pmodul));
+            DB::commit();
+
+            return redirect('/penyimpanan-modul')->with(['jenis' => 'success', 'pesan' => 'Modul Berhasil Diupdate!']);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("Error update data satuan = " . $exception->getMessage());
+            Log::error("Error update data satuan = " . $exception->getFile());
+            Log::error("Error update data satuan = " . $exception->getTraceAsString());
+
+            return redirect()->route('admin.penyimpanan-modul.index')->with(['jenis' => 'error', 'pesan' => 'Modul Gagal Diupdate!']);
+        }
     }
 
     /**
@@ -151,10 +172,9 @@ class PenyimpananModulController extends Controller
         Log::info("Data User = " . json_encode(auth()->user()));
         Log::info('Start');
 
-        $idFile = $pmodul->id_file;
         $pmodul->delete();
         // $deleted = Storage::disk("google")->deleteDirectory($firstDir);
-        $deleted = Storage::disk("google")->delete($idFile);
+        Storage::disk("google")->delete($pmodul->id_file);
         Log::info('Data modul berhasil di delete');
 
         return redirect()->route('admin.penyimpanan-modul.index')->with(['jenis' => 'success', 'pesan' => 'Berhasil Delete modul']);

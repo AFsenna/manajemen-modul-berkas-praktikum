@@ -4,6 +4,8 @@
     Jadwal Pembelian Modul
 @endsection
 @push('css')
+    <link rel="stylesheet" href="{{ asset('node_modules/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('node_modules/selectric/public/selectric.css') }}">
     <style>
         table,
         th,
@@ -80,7 +82,15 @@
         </div>
     </div>
 @endsection
-
+@push('js')
+    <script src="{{ asset('node_modules/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('node_modules/selectric/public/jquery.selectric.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+@endpush
 @push('modal')
     <!-- Modal tambah Aplikasi-->
     <div class="modal fade" id="newModul" data-backdrop="static" tabindex="-1" aria-labelledby="newModulLabel"
@@ -96,26 +106,21 @@
                 <form action="#" method="POST">
                     <div class="modal-body">
                         <div class="form-group">
-                            <select name="media_id" id="media_id" class="form-control">
+                            <label>Koordinator Modul</label>
+                            <select name="media_id" id="media_id" class="form-control select2"
+                                style="width: 100%; height:100%">
                                 <option value="" disabled selected>-- Pilih Koordinator Modul --</option>
                                 <option value="1">Alexandria Felicia Seanne</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="berkas" class="form-control" id="berkas" placeholder="Lokasi">
+                            <label>Lokasi Pembelian</label>
+                            <input type="text" name="berkas" class="form-control" id="berkas"
+                                placeholder="Masukkan Lokasi">
                         </div>
                         <div class="form-group">
-                            <span>Waktu Pembelian</span>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="date" name="berkas" class="form-control" id="berkas"
-                                        placeholder="Nama Aplikasi">
-                                </div>
-                                <div class="col">
-                                    <input type="time" name="berkas" class="form-control" id="berkas"
-                                        placeholder="Nama Aplikasi">
-                                </div>
-                            </div>
+                            <label>Waktu Pembelian</label>
+                            <input type="datetime-local" name="waktu" class="form-control" id="waktu">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -142,26 +147,21 @@
                 <form action="#" method="POST">
                     <div class="modal-body">
                         <div class="form-group">
-                            <select name="media_id" id="media_id" class="form-control">
+                            <label>Koordinator Modul</label>
+                            <select name="media_id" id="media_id" class="form-control select2"
+                                style="width: 100%; height:100%">
                                 <option value="" disabled selected>-- Pilih Koordinator Modul --</option>
                                 <option value="1">Alexandria Felicia Seanne</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="berkas" class="form-control" id="berkas" placeholder="Lokasi">
+                            <label>Lokasi Pembelian</label>
+                            <input type="text" name="berkas" class="form-control" id="berkas"
+                                placeholder="Masukkan Lokasi">
                         </div>
                         <div class="form-group">
-                            <span>Waktu Pembelian</span>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="date" name="berkas" class="form-control" id="berkas"
-                                        placeholder="Nama Aplikasi">
-                                </div>
-                                <div class="col">
-                                    <input type="time" name="berkas" class="form-control" id="berkas"
-                                        placeholder="Nama Aplikasi">
-                                </div>
-                            </div>
+                            <label>Waktu Pembelian</label>
+                            <input type="datetime-local" name="waktu" class="form-control" id="waktu">
                         </div>
                     </div>
                     <div class="modal-footer">

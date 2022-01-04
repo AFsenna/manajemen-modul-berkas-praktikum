@@ -11,7 +11,7 @@
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 text-gray-800 mb-3">
-        <a href="{{ route('admin.penyimpananBerkas') }}"><i class="fas fa-arrow-left mr-2"></i></a>
+        <a href="{{ route('admin.penyimpananBerkas.index') }}"><i class="fas fa-arrow-left mr-2"></i></a>
         Penyimpanan Berkas Praktikum
     </h1>
 
