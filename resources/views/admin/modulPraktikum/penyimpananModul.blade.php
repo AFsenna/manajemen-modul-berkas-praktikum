@@ -54,7 +54,7 @@
                         @foreach ($modul as $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $row->nama_praktikum }}</td>
+                                <td>{{ $row->idPraktikum }}</td>
                                 <td>Rp. {{ number_format($row->harga, 2, ',', '.') }}</td>
                                 <td>
                                     <a href="https://drive.google.com/uc?id={{ $row->id_file }}&export=media"
@@ -117,7 +117,7 @@
                         .find('option')
                         .end()
                         .append(
-                            `<option value="${row.nama} ${row.tahun}">${row.nama} ${row.tahun}</option>`
+                            `<option value="${row.id}">${row.nama} ${row.tahun}</option>`
                         )
                     // console.log(`"${row.nama} ${row.tahun}"`)
                 });
@@ -148,7 +148,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="nama_praktikum"> Nama Praktikum</label>
-                            <select name="nama_praktikum" id="nama_praktikumtambah" class="form-control select2"
+                            <select name="idPraktikum" id="nama_praktikumtambah" class="form-control select2"
                                 style="width: 100%; height:100%">
                                 {{-- <option value="" disabled selected>-- Pilih Praktikum --</option>
                                 @foreach ($praktikum as $prak)
@@ -207,7 +207,7 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="nama_praktikum"> Nama Praktikum</label>
-                                <select name="nama_praktikum" id="nama_praktikumedit" class="form-control select2"
+                                <select name="idPraktikum" id="nama_praktikumedit" class="form-control select2"
                                     style="width: 100%; height:100%">
                                     {{-- <option value="" disabled selected>-- Pilih Praktikum --</option>
                                 @foreach ($praktikum as $prak)

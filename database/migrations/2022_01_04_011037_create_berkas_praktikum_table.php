@@ -15,7 +15,7 @@ class CreateBerkasPraktikumTable extends Migration
     {
         Schema::create('berkasPraktikum', function (Blueprint $table) {
             $table->bigIncrements('id_berkasPrak');
-            $table->string('nama_praktikum')->unique();
+            $table->integer('idPraktikum')->unique();
             $table->string('name', 50);
             $table->string('npm', 16);
             $table->string('idKwitansi');

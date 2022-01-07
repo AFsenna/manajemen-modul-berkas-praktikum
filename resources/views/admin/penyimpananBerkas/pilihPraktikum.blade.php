@@ -4,6 +4,10 @@
     Pilih Praktikum
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('node_modules/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('node_modules/selectric/public/selectric.css') }}">
+@endpush
 
 @section('content')
     <!-- Page Heading -->
@@ -21,10 +25,12 @@
                 @csrf
                 <div class="body">
                     <div class="form-group">
-                        <select name="media_id" id="media_id" class="form-control">
+                        <select name="idPraktikum" id="idPraktikum" class="form-control select2"
+                            style="width: 100%; height:100%">
                             <option value="" disabled selected>-- Pilih Praktikum --</option>
-                            <option value="1">Basis Data 2021</option>
-                            <option value="2">Basis Data 2020</option>
+                            @foreach ($praktikum as $row)
+                                <option value="{{ $row->id }}">{{ $row->nama . ' ' . $row->tahun }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -35,3 +41,13 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script src="{{ asset('node_modules/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('node_modules/selectric/public/jquery.selectric.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+@endpush

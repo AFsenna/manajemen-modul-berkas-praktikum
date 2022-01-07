@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PenyimpananModul extends Migration
+class CreateJadwalModulTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class PenyimpananModul extends Migration
      */
     public function up()
     {
-        Schema::create('penyimpanan_modul', function (Blueprint $table) {
-            $table->bigIncrements('id_pmodul');
-            $table->string('credential');
+        Schema::create('jadwal_modul', function (Blueprint $table) {
+            $table->bigIncrements('id_jadwal');
+            $table->integer('idAslab');
             $table->integer('idPraktikum')->unique();
-            $table->bigInteger('harga');
-            $table->string('id_file');
+            $table->longText('lokasiPembelian');
+            $table->dateTime('waktuPembelian');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class PenyimpananModul extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('jadwal_modul');
     }
 }

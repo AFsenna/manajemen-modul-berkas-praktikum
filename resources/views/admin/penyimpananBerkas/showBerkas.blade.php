@@ -6,6 +6,13 @@
 
 @push('css')
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <style>
+        .kwitansi:hover {
+            width: 450px;
+            height: 500px;
+        }
+
+    </style>
 @endpush
 
 @section('content')
@@ -28,59 +35,56 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>NPM</th>
-                            <th>Foto kwitansi</th>
+                            <th>Foto kwitansi
+                                <span class="btn info" data-toggle="tooltip"
+                                    title="Arahkan kursor ke arah gambar agar dapat terlihat lebih jelas"><i
+                                        class="fa fa-info-circle"></i></span>
+                            </th>
                             <th>PDF Pendaftaran</th>
                             <th>PDF KRS</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Alexandria Felicia Seanne</td>
-                            <td>06.2019.1.07103</td>
-                            <td>
-                                <img src="{{ asset('img/contohkwitansi.jpg') }}" width="200px" height="100px" alt="">
-                            </td>
-                            <td>
-                                <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
-                                    target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
-                                        class="fa fa-eye"></i></a>
-                            </td>
-                            <td>
-                                <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
-                                        class="fa fa-eye"></i></a>
-                            </td>
-                            <td>
-                                <div class="badge badge-pill badge-success" style="min-width: 100px; font-size:15px">
-                                    Disetujui
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Alexandria Felicia Seanne</td>
-                            <td>06.2019.1.07103</td>
-                            <td>
-                                <img src="{{ asset('img/contohkwitansi.jpg') }}" width="200px" height="100px" alt="">
-                            </td>
-                            <td>
-                                <a href="https://drive.google.com/file/d/1iy-iXFnrRQlbn9CzWYPeALHeKHR_BfAS/view?usp=sharing"
-                                    target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
-                                        class="fa fa-eye"></i></a>
-                            </td>
-                            <td>
-                                <a href="https://drive.google.com/file/d/1jF3qYe2dMOpqsi8UhnqyDaC2S7tdK_s_/view?usp=sharing"
-                                    target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
-                                        class="fa fa-eye"></i></a>
-                            </td>
-                            <td>
-                                <div class="badge badge-pill badge-danger" style="min-width: 100px; font-size:15px">
-                                    Belum Disetujui
-                                </div>
-                            </td>
-                        </tr>
+                        @foreach ($berkas as $row)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>Alexandria Felicia Seanne</td>
+                                <td>06.2019.1.07103</td>
+                                <td>
+                                    <img class="kwitansi"
+                                        src="https://drive.google.com/uc?export=view&id={{ $row->idKwitansi }}"
+                                        width="200px" height="100px" alt="">
+                                </td>
+                                <td>
+                                    <a href="https://drive.google.com/uc?id={{ $row->idPendaftaran }}&export=media"
+                                        target="__blank" class="btn btn-info" data-toggle="tooltip" title="Lihat File"><i
+                                            class="fa fa-eye"></i></a>
+                                </td>
+                                <td>
+                                    <a href="https://drive.google.com/uc?id={{ $row->idKRS }}&export=media"
+                                        target="__blank" class="btn btn-primary" data-toggle="tooltip" title="Lihat File"><i
+                                            class="fa fa-eye"></i></a>
+                                </td>
+                                <td>
+                                    @if ($row->status == 0)
+                                        <div class="badge badge-pill badge-danger" style="min-width: 100px; font-size:15px">
+                                            Belum Disetujui
+                                        </div>
+                                    @elseif ($row->status == 1)
+                                        <div class="badge badge-pill badge-success"
+                                            style="min-width: 100px; font-size:15px">
+                                            Disetujui
+                                        </div>
+                                    @elseif ($row->status == 2)
+                                        <div class="badge badge-pill badge-warning"
+                                            style="min-width: 100px; font-size:15px">
+                                            BerkasDitolak
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

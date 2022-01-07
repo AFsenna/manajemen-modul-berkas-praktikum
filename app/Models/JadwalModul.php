@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PenyimpananModul extends Model
+class JadwalModul extends Model
 {
     use HasFactory;
-    protected $table = "penyimpanan_modul";
-    public $primaryKey = 'id_pmodul';
+    protected $table = "jadwal_modul";
+    public $primaryKey = 'id_jadwal';
 
     protected $fillable = [
-        'idPraktikum', 'harga', 'credential', 'id_file'
+        'idAslab', 'idPraktikum', 'lokasiPembelian', 'waktuPembelian',
     ];
 }

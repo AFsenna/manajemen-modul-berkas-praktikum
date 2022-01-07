@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin\berkas;
 
 use App\Http\Controllers\Controller;
+use App\Models\BerkasPraktikum;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class PenyimpananBerkas extends Controller
 {
@@ -14,7 +16,12 @@ class PenyimpananBerkas extends Controller
      */
     public function index()
     {
-        return view('admin.penyimpananBerkas.pilihPraktikum');
+        $client = new Client();
+        $key = date("Ymd");
+        $id = auth()->user()->credential;
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAllPraktikum?id=$id&key=$key");
+        $praktikum = json_decode($response->getBody()->getContents());
+        return view('admin.penyimpananBerkas.pilihPraktikum', compact('praktikum'));
     }
 
     /**
@@ -35,7 +42,13 @@ class PenyimpananBerkas extends Controller
      */
     public function store(Request $request)
     {
-        return view('admin.penyimpananBerkas.showBerkas');
+        $client = new Client();
+        $key = date("Ymd");
+        $id = $request->idPraktikum;
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=5&key=$key");
+        $praktikum = json_decode($response->getBody()->getContents());
+        $berkas = BerkasPraktikum::where('idPraktikum', $id)->get();
+        return view('admin.penyimpananBerkas.showBerkas', compact('praktikum', 'berkas'));
     }
 
     /**

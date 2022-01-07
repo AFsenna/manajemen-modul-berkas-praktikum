@@ -8,11 +8,27 @@
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('node_modules/select2/dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('node_modules/selectric/public/selectric.css') }}">
+    <style>
+        .kwitansi:hover {
+            width: 400px;
+            height: 500px;
+        }
+
+    </style>
 @endpush
 
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 text-gray-800">Berkas Praktikum</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="mb-3">
         <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newBerkas">
@@ -35,7 +51,11 @@
                         <tr>
                             <th>No</th>
                             <th>Praktikum</th>
-                            <th>Foto kwitansi</th>
+                            <th>Foto kwitansi
+                                <span class="btn info" data-toggle="tooltip"
+                                    title="Arahkan kursor ke arah gambar agar dapat terlihat lebih jelas"><i
+                                        class="fa fa-info-circle"></i></span>
+                            </th>
                             <th>PDF Pendaftaran</th>
                             <th>PDF KRS</th>
                             <th>Status</th>
@@ -45,10 +65,11 @@
                     <tbody>
                         @foreach ($berkasPrak as $row)
                             <tr>
-                                <td>1</td>
-                                <td style="max-width: 200px">{{ $row->nama_praktikum }}</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td style="max-width: 200px">{{ $row->idPraktikum }}</td>
                                 <td>
-                                    <img src="https://drive.google.com/uc?export=view&id={{ $row->idKwitansi }}"
+                                    <img class="kwitansi"
+                                        src="https://drive.google.com/uc?export=view&id={{ $row->idKwitansi }}"
                                         width="200px" height="100px" alt="">
                                 </td>
                                 <td>
@@ -126,22 +147,22 @@
         $(document).ready(function() {
             $('.select2').select2();
 
-            $('#nama_praktikumtambah')
+            $('#nama_praktikumtambah,#nama_praktikumedit')
                 .find('option')
                 .remove();
 
-            $('#nama_praktikumtambah')
+            $('#nama_praktikumtambah,#nama_praktikumedit')
                 .find('option')
                 .end()
                 .append(`<option value="" selected disabled> --- Pilih Praktikum ---</option>`)
 
             $.get(`{{ route('praktikan.berkasPraktikum.getPraktikumJson') }}`, function(data) {
                 $.each(data, function(index, row) {
-                    $('#nama_praktikumtambah')
+                    $('#nama_praktikumtambah,#nama_praktikumedit')
                         .find('option')
                         .end()
                         .append(
-                            `<option value="${row.nama} ${row.tahun}">${row.nama} ${row.tahun}</option>`
+                            `<option value="${row.id}">${row.nama} ${row.tahun}</option>`
                         )
                     // console.log(`"${row.nama} ${row.tahun}"`)
                 });
@@ -172,7 +193,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="nama_praktikum"> Nama Praktikum</label>
-                            <select name="nama_praktikum" id="nama_praktikumtambah" class="form-control select2"
+                            <select name="idPraktikum" id="nama_praktikumtambah" class="form-control select2"
                                 style="width: 100%; height:100%">
                             </select>
                         </div>
@@ -212,50 +233,62 @@
     <!-- endmodal -->
 
     <!-- Modal edit Aplikasi-->
-    <div class="modal fade" id="editBerkas" data-backdrop="static" tabindex="-1" aria-labelledby="editBerkasLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editBerkasLabel">Edit Berkas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    @foreach ($berkasPrak as $row)
+        <div class="modal fade" id="editBerkas{{ $row->id_berkasPrak }}" data-backdrop="static" tabindex="-1"
+            aria-labelledby="editBerkasLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editBerkasLabel">Edit Berkas</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('praktikan.berkas-praktikum.update', $row->id_berkasPrak) }}"
+                        enctype="multipart/form-data" method="POST">
+                        @csrf
+                        @method('put')
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="nama_praktikum"> Nama Praktikum</label>
+                                <select name="idPraktikum" id="nama_praktikumedit" class="form-control select2"
+                                    style="width: 100%; height:100%">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="scan_kwiansi"> Scan Kwitansi</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="scan_kwitansiedit"
+                                        accept="image/x-png, image/jpeg" name="scan_kwitansi">
+                                    <label class="custom-file-label" for="scan_kwiansi">Masukkan file gambar</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pdf_pendaftaran"> PDF Pendaftaran</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="pdf_pendaftaranedit"
+                                        accept="application/pdf" name="pdf_pendaftaran">
+                                    <label class="custom-file-label" for="pdf_pendaftaran">Masukkan file PDF
+                                        Pendaftaran</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pdf_krs"> PDF KRS</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="pdf_krs" name="pdf_krsedit"
+                                        accept="application/pdf">
+                                    <label class="custom-file-label" for="pdf_krs">Masukkan file PDF KRS</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                        </div>
+                    </form>
                 </div>
-                <form action="#" method="POST">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="scan_kwiansi"> Scan Kwitansi</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="scan_kwitansi"
-                                    accept="image/x-png, image/jpeg" name="scan_kwitansi">
-                                <label class="custom-file-label" for="scan_kwiansi">Masukkan file gambar</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="pdf_pendaftaran"> PDF Pendaftaran</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="pdf_pendaftaran" accept="application/pdf"
-                                    name="pdf_pendaftaran">
-                                <label class="custom-file-label" for="pdf_pendaftaran">Masukkan file PDF Pendaftaran</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="pdf_krs"> PDF KRS</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="pdf_krs" name="pdf_krs"
-                                    accept="application/pdf">
-                                <label class="custom-file-label" for="pdf_krs">Masukkan file PDF KRS</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
+    @endforeach
     <!-- endmodal -->
 @endpush

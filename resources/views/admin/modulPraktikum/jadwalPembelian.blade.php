@@ -25,20 +25,32 @@
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 text-gray-800">Jadwal Pembelian Modul</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="mb-3">
-        <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newModul">
-            <span class="icon text-white-50">
-                <i class="fas fa-edit"></i>
-            </span>
-            <span class="text">Atur Jadwal</span>
-        </button>
-        <button class="btn btn-warning btn-icon-split" data-toggle="modal" data-target="#editModul">
-            <span class="icon text-white-50">
-                <i class="fas fa-pencil-alt"></i>
-            </span>
-            <span class="text">Ubah Jadwal</span>
-        </button>
+        @if ($jadwal == null)
+            <button class="btn btn-info btn-icon-split" data-toggle="modal" data-target="#newModul">
+                <span class="icon text-white-50">
+                    <i class="fas fa-edit"></i>
+                </span>
+                <span class="text">Atur Jadwal</span>
+            </button>
+        @else
+            <button class="btn btn-warning btn-icon-split" data-toggle="modal" data-target="#editModul">
+                <span class="icon text-white-50">
+                    <i class="fas fa-pencil-alt"></i>
+                </span>
+                <span class="text">Ubah Jadwal</span>
+            </button>
+        @endif
     </div>
 
     <!-- DataTales Example -->
@@ -52,29 +64,30 @@
             </div> --}}
             <center>
                 <div class="card-header bg-primary" style="width:70%;">
-                    <h6 class="font-weight-bold text-light">Jadwal Pembelian Modul Basis Data 2021</h6>
+                    <h6 class="font-weight-bold text-light">Jadwal Pembelian Modul
+                        {{ $praktikumAktif[0]->nama . ' ' . $praktikumAktif[0]->tahun }}</h6>
                 </div>
                 <div class="card" style="width:70%;">
                     <table style="width:100%;">
                         <tr>
                             <th>Koordinator Modul</th>
                             <th>:</th>
-                            <td>Alexandria Felicia Seanne</td>
+                            <td>{{ $aslab == null ? 'Belum Diatur' : $aslab[0]->nama }}</td>
                         </tr>
                         <tr>
                             <th>Nomor Telepon</th>
                             <th>:</th>
-                            <td>082285132960</td>
+                            <td>{{ $aslab == null ? 'Belum Diatur' : $aslab[0]->no_tlpn }}</td>
                         </tr>
                         <tr>
                             <th>Lokasi Pembelian</th>
                             <th>:</th>
-                            <td>Gedung H Didepan Ruang Jurusan Informatika ITATS</td>
+                            <td>{{ $jadwal == null ? 'Belum Diatur' : $jadwal->lokasiPembelian }}</td>
                         </tr>
                         <tr>
                             <th>Waktu Pembelian</th>
                             <th>:</th>
-                            <td>22 November 2021 13:00 PM</td>
+                            <td>{{ $jadwal == null ? 'Belum Diatur' : $jadwal->waktuPembelian }}</td>
                         </tr>
                     </table>
                 </div>
@@ -104,23 +117,27 @@
                     </button>
                 </div>
                 <form action="#" method="POST">
+                    @csrf
                     <div class="modal-body">
+                        <input type="hidden" name="idPraktikum" value="{{ $praktikumAktif[0]->id }}">
                         <div class="form-group">
                             <label>Koordinator Modul</label>
-                            <select name="media_id" id="media_id" class="form-control select2"
+                            <select name="koordinator" id="koordinator" class="form-control select2"
                                 style="width: 100%; height:100%">
                                 <option value="" disabled selected>-- Pilih Koordinator Modul --</option>
-                                <option value="1">Alexandria Felicia Seanne</option>
+                                @foreach ($aslabAktif as $row)
+                                    <option value="{{ $row->id }}">{{ $row->nama . ' (' . $row->username . ')' }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Lokasi Pembelian</label>
-                            <input type="text" name="berkas" class="form-control" id="berkas"
-                                placeholder="Masukkan Lokasi">
+                            <textarea name="lokasi" id="lokasi" cols="50" rows="3" required></textarea>
                         </div>
                         <div class="form-group">
                             <label>Waktu Pembelian</label>
-                            <input type="datetime-local" name="waktu" class="form-control" id="waktu">
+                            <input type="datetime-local" name="waktu" class="form-control" id="waktu" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -144,24 +161,34 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="#" method="POST">
+                <form action="{{ route('admin.jadwalModul.update', $jadwal == null ? 0 : $jadwal->id_jadwal) }}"
+                    method="POST">
+                    @csrf
+                    @method('put')
                     <div class="modal-body">
+                        <input type="hidden" name="idPraktikum" value="{{ $praktikumAktif[0]->id }}">
                         <div class="form-group">
                             <label>Koordinator Modul</label>
-                            <select name="media_id" id="media_id" class="form-control select2"
+                            <select name="koordinator" id="media_idnew" class="form-control select2"
                                 style="width: 100%; height:100%">
                                 <option value="" disabled selected>-- Pilih Koordinator Modul --</option>
-                                <option value="1">Alexandria Felicia Seanne</option>
+                                @foreach ($aslabAktif as $row)
+                                    <option value="{{ $row->id }}"
+                                        {{ $row->id == $jadwal->idAslab ? 'selected' : '' }}>
+                                        {{ $row->nama . ' (' . $row->username . ')' }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Lokasi Pembelian</label>
-                            <input type="text" name="berkas" class="form-control" id="berkas"
-                                placeholder="Masukkan Lokasi">
+                            <textarea name="lokasi" id="lokasi" cols="50" rows="3"
+                                required>{{ $jadwal == null ? 'Belum Diatur' : $jadwal->lokasiPembelian }}</textarea>
                         </div>
                         <div class="form-group">
-                            <label>Waktu Pembelian</label>
-                            <input type="datetime-local" name="waktu" class="form-control" id="waktu">
+                            <label>Waktu Pembelian (kosongi jika tidak ingin diganti)</label>
+                            <input type="datetime-local" name="waktu" class="form-control" id="waktunew"
+                                value="{{ $jadwal == null ? 'Belum Diatur' : $jadwal->waktuPembelian }}">
                         </div>
                     </div>
                     <div class="modal-footer">

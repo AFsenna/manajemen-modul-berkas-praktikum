@@ -36,7 +36,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
                 <a class="collapse-item" href="{{ route('admin.penyimpanan-modul.index') }}">Penyimpanan Modul</a>
-                <a class="collapse-item" href="{{ route('admin.pembelianModul') }}">Jadwal Pembelian</a>
+                <a class="collapse-item" href="{{ route('admin.jadwalModul.index') }}">Jadwal Pembelian</a>
                 <a class="collapse-item" href="{{ route('admin.verifikasiModul') }}">Verif Pembelian Modul</a>
             </div>
         </div>

@@ -28,7 +28,7 @@ class BerkasPraktikumController extends Controller
     {
         $client = new Client();
         $key = date("Ymd");
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=1&key=$key");
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktifAll?key=$key");
         $decodeResponse = json_decode($response->getBody()->getContents());
         return response()->json($decodeResponse);
     }
@@ -52,7 +52,7 @@ class BerkasPraktikumController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nama_praktikum' => 'required|unique:berkasPraktikum,nama_praktikum',
+            'idPraktikum' => 'required|unique:berkasPraktikum,idPraktikum',
             'scan_kwitansi' => 'required',
             'pdf_krs' => 'required',
             'pdf_pendaftaran' => 'required',
@@ -63,7 +63,13 @@ class BerkasPraktikumController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
-            $namaFile = auth()->user()->name . '_' . auth()->user()->npm . '_' . $request->nama_praktikum;
+            $client = new Client();
+            $key = date("Ymd");
+            $id = $request->idPraktikum;
+            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
+            $praktikum = json_decode($response->getBody()->getContents());
+            $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
+            $namaFile = auth()->user()->name . '_' . auth()->user()->npm . '_' . $namaPraktikum;
 
             Storage::disk("google")->putFileAs("", $request->file("scan_kwitansi"), "$namaFile" . '_kwitansi');
             Storage::disk("google")->putFileAs("", $request->file("pdf_pendaftaran"), "$namaFile" . '_pendaftaran');
@@ -79,7 +85,7 @@ class BerkasPraktikumController extends Controller
             $berkasPrak =  BerkasPraktikum::create([
                 'name' => auth()->user()->name,
                 'npm' => auth()->user()->credential,
-                'nama_praktikum' => $request->nama_praktikum,
+                'idPraktikum' => $id,
                 'idKwitansi' => $kwitansi['path'],
                 'idPendaftaran' => $pendaftaran['path'],
                 'idKRS' => $krs['path'],
@@ -88,7 +94,7 @@ class BerkasPraktikumController extends Controller
             Log::info("Data berkas baru = " . json_encode($berkasPrak));
             DB::commit();
 
-            return redirect('/berkas-praktikum')->with(['jenis' => 'success', 'pesan' => 'Berkas Berhasil Disimpan!']);
+            return redirect()->route('praktikan.berkas-praktikum.index')->with(['jenis' => 'success', 'pesan' => 'Berkas Berhasil Disimpan!']);
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error("Error simpan data berkas = " . $exception->getMessage());
@@ -130,7 +136,72 @@ class BerkasPraktikumController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $berkasPrak =  BerkasPraktikum::find($id);
+
+        $this->validate($request, [
+            'idPraktikum' => "required|unique:berkasPraktikum,nama_praktikum,$berkasPrak->id_berkasPrak,id_berkasPrak",
+        ]);
+
+        try {
+            Log::info('Request update data modul berisi = ' . json_encode($berkasPrak));
+            Log::info("Data User = " . json_encode(auth()->user()));
+            Log::info('Start');
+
+            $client = new Client();
+            $key = date("Ymd");
+            $id = $request->idPraktikum;
+            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
+            $praktikum = json_decode($response->getBody()->getContents());
+            $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
+            $namaFile = auth()->user()->name . '_' . auth()->user()->npm . '_' . $namaPraktikum;
+
+            if ($request->file("scan_kwitansi")) {
+                Storage::disk("google")->delete($berkasPrak->idKwitansi);
+                Storage::disk("google")->putFileAs("", $request->file("scan_kwitansi"), "$namaFile" . '_kwitansi');
+                $kwitansi = Storage::disk("google")->getMetadata("$namaFile" . '_kwitansi');
+                Storage::disk("google")->setVisibility($kwitansi['path'], 'public');
+            } else {
+                $kwitansi['path'] = $berkasPrak->idKwitansi;
+            }
+
+            if ($request->file("pdf_krs")) {
+                Storage::disk("google")->delete($berkasPrak->idKRS);
+                Storage::disk("google")->putFileAs("", $request->file("idKRS"), "$namaFile" . '_krs');
+                $krs = Storage::disk("google")->getMetadata("$namaFile" . '_krs');
+                Storage::disk("google")->setVisibility($krs['path'], 'public');
+            } else {
+                $krs['path'] = $berkasPrak->idKRS;
+            }
+
+            if ($request->file("pdf_pendaftaran")) {
+                Storage::disk("google")->delete($berkasPrak->idPendaftaran);
+                Storage::disk("google")->putFileAs("", $request->file("pdf_pendaftaran"), "$namaFile" . '_pendaftaran');
+                $pendaftaran = Storage::disk("google")->getMetadata("$namaFile" . '_pendaftaran');
+                Storage::disk("google")->setVisibility($pendaftaran['path'], 'public');
+            } else {
+                $pendaftaran['path'] = $berkasPrak->idKRS;
+            }
+
+            DB::beginTransaction();
+            $berkasPrak->update([
+                'idPraktikum' => $id,
+                'idKwitansi' => $kwitansi['path'],
+                'idPendaftaran' => $pendaftaran['path'],
+                'idKRS' => $krs['path'],
+            ]);
+
+            Log::info("Data modul setelah diupdate = " . json_encode($berkasPrak));
+            DB::commit();
+
+            return redirect()->route('praktikan.berkas-praktikum.index')->with(['jenis' => 'success', 'pesan' => 'Berkas Berhasil Diupdate!']);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("Error update data berkas = " . $exception->getMessage());
+            Log::error("Error update data berkas = " . $exception->getFile());
+            Log::error("Error update data berkas = " . $exception->getTraceAsString());
+
+            return redirect()->route('praktikan.berkas-praktikum.index')->with(['jenis' => 'error', 'pesan' => 'Berkas Gagal Diupdate!']);
+        }
     }
 
     /**
@@ -141,6 +212,20 @@ class BerkasPraktikumController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $berkasPrak =  BerkasPraktikum::find($id);
+
+        Log::info('Request data berkas yang ingin didelete = ' . json_encode($berkasPrak));
+        Log::info("Data User = " . json_encode(auth()->user()));
+        Log::info('Start');
+
+        $berkasPrak->delete();
+
+        Storage::disk("google")->delete($berkasPrak->idKwitansi);
+        Storage::disk("google")->delete($berkasPrak->idPendaftaran);
+        Storage::disk("google")->delete($berkasPrak->idKRS);
+
+        Log::info('Data berkas berhasil di delete');
+
+        return redirect()->route('praktikan.berkas-praktikum.index')->with(['jenis' => 'success', 'pesan' => 'Berhasil Delete berkas']);
     }
 }

@@ -53,7 +53,7 @@ class PenyimpananModulController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nama_praktikum' => 'required|unique:penyimpanan_modul,nama_praktikum',
+            'idPraktikum' => 'required|unique:penyimpanan_modul,idPraktikum',
             'file_modul' => 'required',
             'harga_modul' => 'required'
         ]);
@@ -63,12 +63,20 @@ class PenyimpananModulController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
-            Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
-            $result = Storage::disk("google")->getMetadata($request->nama_praktikum);
+            $client = new Client();
+            $key = date("Ymd");
+            $id = $request->idPraktikum;
+            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
+            $praktikum = json_decode($response->getBody()->getContents());
+            $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
+
+            Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$namaPraktikum");
+            $result = Storage::disk("google")->getMetadata($namaPraktikum);
+            Storage::disk("google")->setVisibility($result['path'], 'public');
 
             DB::beginTransaction();
             $pmodul =  PenyimpananModul::create([
-                'nama_praktikum' => $request->nama_praktikum,
+                'idPraktikum' => $id,
                 'harga' => $request->harga_modul,
                 'credential' => auth()->user()->credential,
                 'id_file' => $result['path'],
@@ -120,7 +128,7 @@ class PenyimpananModulController extends Controller
         $pmodul = PenyimpananModul::find($id);
 
         $this->validate($request, [
-            'nama_praktikum' => "required|unique:penyimpanan_modul,nama_praktikum,$pmodul->id_pmodul,id_pmodul",
+            'idPraktikum' => "required|unique:penyimpanan_modul,idPraktikum,$pmodul->id_pmodul,id_pmodul",
             'harga_modul' => 'required'
         ]);
 
@@ -129,17 +137,24 @@ class PenyimpananModulController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
+            $client = new Client();
+            $key = date("Ymd");
+            $id = $request->idPraktikum;
+            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
+            $praktikum = json_decode($response->getBody()->getContents());
+            $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
+
             if ($request->file("file_modul")) {
                 Storage::disk("google")->delete($pmodul->id_file);
-                Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$request->nama_praktikum");
-                $result = Storage::disk("google")->getMetadata($request->nama_praktikum);
+                Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$namaPraktikum");
+                $result = Storage::disk("google")->getMetadata($namaPraktikum);
             } else {
                 $result['path'] = $pmodul->id_file;
             }
 
             DB::beginTransaction();
             $pmodul->update([
-                'nama_praktikum' => $request->nama_praktikum,
+                'idPraktikum' => $id,
                 'harga' => $request->harga_modul,
                 'id_file' => $result['path'],
             ]);
