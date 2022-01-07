@@ -25,7 +25,8 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Data Berkas Praktikum Basis Data 2021</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Data Berkas Praktikum
+                {{ $praktikumAktif[0]->nama . ' ' . $praktikumAktif[0]->tahun }}</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">

@@ -45,10 +45,10 @@ class PenyimpananBerkas extends Controller
         $client = new Client();
         $key = date("Ymd");
         $id = $request->idPraktikum;
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=5&key=$key");
-        $praktikum = json_decode($response->getBody()->getContents());
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
+        $praktikumAktif = json_decode($response->getBody()->getContents());
         $berkas = BerkasPraktikum::where('idPraktikum', $id)->get();
-        return view('admin.penyimpananBerkas.showBerkas', compact('praktikum', 'berkas'));
+        return view('admin.penyimpananBerkas.showBerkas', compact('praktikumAktif', 'berkas'));
     }
 
     /**

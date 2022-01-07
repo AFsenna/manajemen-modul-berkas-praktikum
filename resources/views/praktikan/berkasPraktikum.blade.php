@@ -63,10 +63,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($berkasPrak as $row)
+                        @foreach ($berkasPrak as $key => $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td style="max-width: 200px">{{ $row->idPraktikum }}</td>
+                                <td style="max-width: 200px">{{ $praktikum[$key]->nama . ' ' . $praktikum[$key]->tahun }}
+                                </td>
                                 <td>
                                     <img class="kwitansi"
                                         src="https://drive.google.com/uc?export=view&id={{ $row->idKwitansi }}"
@@ -146,27 +147,6 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2();
-
-            $('#nama_praktikumtambah,#nama_praktikumedit')
-                .find('option')
-                .remove();
-
-            $('#nama_praktikumtambah,#nama_praktikumedit')
-                .find('option')
-                .end()
-                .append(`<option value="" selected disabled> --- Pilih Praktikum ---</option>`)
-
-            $.get(`{{ route('praktikan.berkasPraktikum.getPraktikumJson') }}`, function(data) {
-                $.each(data, function(index, row) {
-                    $('#nama_praktikumtambah,#nama_praktikumedit')
-                        .find('option')
-                        .end()
-                        .append(
-                            `<option value="${row.id}">${row.nama} ${row.tahun}</option>`
-                        )
-                    // console.log(`"${row.nama} ${row.tahun}"`)
-                });
-            });
         });
 
         $('.custom-file-input').on('change', function() {
@@ -195,6 +175,10 @@
                             <label for="nama_praktikum"> Nama Praktikum</label>
                             <select name="idPraktikum" id="nama_praktikumtambah" class="form-control select2"
                                 style="width: 100%; height:100%">
+                                <option value="" disabled selected>-- Pilih Praktikum --</option>
+                                @foreach ($praktikum as $row)
+                                    <option value="{{ $row->id }}">{{ $row->nama . ' ' . $row->tahun }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -253,6 +237,13 @@
                                 <label for="nama_praktikum"> Nama Praktikum</label>
                                 <select name="idPraktikum" id="nama_praktikumedit" class="form-control select2"
                                     style="width: 100%; height:100%">
+                                    <option value="" disabled selected>-- Pilih Praktikum --</option>
+                                    @foreach ($praktikum as $prak)
+                                        <option value="{{ $prak->id }}"
+                                            {{ $prak->id == $row->idPraktikum ? 'selected' : '' }}>
+                                            {{ $prak->nama . ' ' . $prak->tahun }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">

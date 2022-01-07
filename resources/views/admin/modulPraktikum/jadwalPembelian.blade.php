@@ -151,53 +151,56 @@
     <!-- endmodal -->
 
     <!-- Modal edit Aplikasi-->
-    <div class="modal fade" id="editModul" data-backdrop="static" tabindex="-1" aria-labelledby="editModulLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModulLabel">Edit Jadwal</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    @if ($jadwal)
+        <div class="modal fade" id="editModul" data-backdrop="static" tabindex="-1" aria-labelledby="editModulLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModulLabel">Edit Jadwal</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('admin.jadwalModul.update', $jadwal == null ? 0 : $jadwal->id_jadwal) }}"
+                        method="POST">
+                        @csrf
+                        @method('put')
+                        <div class="modal-body">
+                            <input type="hidden" name="idPraktikum" value="{{ $praktikumAktif[0]->id }}">
+                            <div class="form-group">
+                                <label>Koordinator Modul</label>
+                                <select name="koordinator" id="media_idnew" class="form-control select2"
+                                    style="width: 100%; height:100%">
+                                    <option value="" disabled selected>-- Pilih Koordinator Modul --</option>
+                                    @foreach ($aslabAktif as $row)
+                                        <option value="{{ $row->id }}"
+                                            {{ $row->id == $jadwal->idAslab ? 'selected' : '' }}>
+                                            {{ $row->nama . ' (' . $row->username . ')' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Lokasi Pembelian</label>
+                                <textarea name="lokasi" id="lokasi" cols="50" rows="3"
+                                    required>{{ $jadwal == null ? 'Belum Diatur' : $jadwal->lokasiPembelian }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Waktu Pembelian (kosongi jika tidak ingin diganti)</label>
+                                <input type="datetime-local" name="waktu" class="form-control" id="waktunew"
+                                    value="{{ $jadwal == null ? 'Belum Diatur' : $jadwal->waktuPembelian }}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                        </div>
+                    </form>
                 </div>
-                <form action="{{ route('admin.jadwalModul.update', $jadwal == null ? 0 : $jadwal->id_jadwal) }}"
-                    method="POST">
-                    @csrf
-                    @method('put')
-                    <div class="modal-body">
-                        <input type="hidden" name="idPraktikum" value="{{ $praktikumAktif[0]->id }}">
-                        <div class="form-group">
-                            <label>Koordinator Modul</label>
-                            <select name="koordinator" id="media_idnew" class="form-control select2"
-                                style="width: 100%; height:100%">
-                                <option value="" disabled selected>-- Pilih Koordinator Modul --</option>
-                                @foreach ($aslabAktif as $row)
-                                    <option value="{{ $row->id }}"
-                                        {{ $row->id == $jadwal->idAslab ? 'selected' : '' }}>
-                                        {{ $row->nama . ' (' . $row->username . ')' }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Lokasi Pembelian</label>
-                            <textarea name="lokasi" id="lokasi" cols="50" rows="3"
-                                required>{{ $jadwal == null ? 'Belum Diatur' : $jadwal->lokasiPembelian }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Waktu Pembelian (kosongi jika tidak ingin diganti)</label>
-                            <input type="datetime-local" name="waktu" class="form-control" id="waktunew"
-                                value="{{ $jadwal == null ? 'Belum Diatur' : $jadwal->waktuPembelian }}">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
+    @endif
+
     <!-- endmodal -->
 @endpush

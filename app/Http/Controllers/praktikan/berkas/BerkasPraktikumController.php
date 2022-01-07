@@ -20,8 +20,28 @@ class BerkasPraktikumController extends Controller
     public function index()
     {
         $id = auth()->user()->credential;
-        $berkasPrak = BerkasPraktikum::get()->where('npm', $id);
-        return view('praktikan.berkasPraktikum', ['berkasPrak' => $berkasPrak]);
+        $berkasPrak = BerkasPraktikum::where('npm', $id)->orderBy('idPraktikum', 'ASC')->get();
+        $key = date("Ymd");
+        $arr = [];
+        foreach ($berkasPrak as $row) {
+            $arr[] = $row->idPraktikum;
+        }
+        // dd($arr);
+        $client = new Client();
+        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/getPraktikumByID', [
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ],
+            'body' => json_encode(
+                [
+                    'key' => $key,
+                    'idPraktikum' => $arr,
+                ]
+            )
+        ]);
+        $praktikum = json_decode($response->getBody()->getContents());
+        // dd($praktikum);
+        return view('praktikan.berkasPraktikum', compact('berkasPrak', 'praktikum'));
     }
 
     public function getPraktikumJson()
@@ -137,9 +157,8 @@ class BerkasPraktikumController extends Controller
     public function update(Request $request, $id)
     {
         $berkasPrak =  BerkasPraktikum::find($id);
-
         $this->validate($request, [
-            'idPraktikum' => "required|unique:berkasPraktikum,nama_praktikum,$berkasPrak->id_berkasPrak,id_berkasPrak",
+            'idPraktikum' => "required|unique:berkasPraktikum,idPraktikum,$berkasPrak->id_berkasPrak,id_berkasPrak",
         ]);
 
         try {
