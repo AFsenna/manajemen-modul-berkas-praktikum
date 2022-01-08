@@ -25,6 +25,11 @@
             background-image: url("{{ asset('img/sea2.jpg') }}");
         }
 
+        .kwitansi:hover {
+            width: 400px;
+            height: 500px;
+        }
+
     </style>
 
     <link rel="stylesheet" href="{{ asset('node_modules/izitoast/dist/css/iziToast.min.css') }}">
@@ -137,9 +142,38 @@
                 });
         }
 
-        function simpan() {
-            $('#card').addClass('card card-progress');
+        function kirim() {
+            // $('.btn').addClass('disabled');
+            swal({
+                // title: "",
+                // text: "Please wait...",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/5/54/Ajux_loader.gif",
+                buttons: false,
+                closeOnClickOutside: false,
+                //icon: "success"
+            });
         }
+
+        function verif(id) {
+            swal("Yakin berkas sudah sesuai?", {
+                buttons: ["Belum", "Ya"],
+                confirmButtonText: 'Ya',
+                showCancelButton: true,
+                closeOnClickOutside: false,
+            }).then((willVerif) => {
+                if (willVerif) {
+                    $('#form-verif-' + id).submit();
+                    kirim();
+                } else {
+                    swal("Cancelled", "Verifikasi Dibatalkan :)", "error");
+                }
+            })
+        }
+
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
     </script>
 </body>
 

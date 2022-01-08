@@ -81,14 +81,14 @@ class JadwalModulController extends Controller
             Log::info("Data jadwal baru = " . json_encode($jadwal));
             DB::commit();
 
-            return redirect()->route('admin.jadwalModul.index')->with(['jenis' => 'success', 'pesan' => 'Jadwal Berhasil Disimpan!']);
+            return redirect()->route('admin.jadwal-modul.index')->with(['jenis' => 'success', 'pesan' => 'Jadwal Berhasil Disimpan!']);
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error("Error simpan data jadwal = " . $exception->getMessage());
             Log::error("Error simpan data jadwal = " . $exception->getFile());
             Log::error("Error simpan data jadwal = " . $exception->getTraceAsString());
 
-            return redirect()->route('admin.jadwalModul.index')->with(['jenis' => 'error', 'pesan' => 'Jadwal Gagal Disimpan!']);
+            return redirect()->route('admin.jadwal-modul.index')->with(['jenis' => 'error', 'pesan' => 'Jadwal Gagal Disimpan!']);
         }
     }
 
@@ -149,14 +149,14 @@ class JadwalModulController extends Controller
             Log::info("Data jadwal setelah diupdate = " . json_encode($jadwal));
             DB::commit();
 
-            return redirect()->route('admin.jadwalModul.index')->with(['jenis' => 'success', 'pesan' => 'Jadwal Berhasil Diupdate!']);
+            return redirect()->route('admin.jadwal-modul.index')->with(['jenis' => 'success', 'pesan' => 'Jadwal Berhasil Diupdate!']);
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error("Error simpan data jadwal = " . $exception->getMessage());
             Log::error("Error simpan data jadwal = " . $exception->getFile());
             Log::error("Error simpan data jadwal = " . $exception->getTraceAsString());
 
-            return redirect()->route('admin.jadwalModul.index')->with(['jenis' => 'error', 'pesan' => 'Jadwal Gagal Diupdate!']);
+            return redirect()->route('admin.jadwal-modul.index')->with(['jenis' => 'error', 'pesan' => 'Jadwal Gagal Diupdate!']);
         }
     }
 

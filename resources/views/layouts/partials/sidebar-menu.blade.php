@@ -36,7 +36,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
                 <a class="collapse-item" href="{{ route('admin.penyimpanan-modul.index') }}">Penyimpanan Modul</a>
-                <a class="collapse-item" href="{{ route('admin.jadwalModul.index') }}">Jadwal Pembelian</a>
+                <a class="collapse-item" href="{{ route('admin.jadwal-modul.index') }}">Jadwal Pembelian</a>
                 <a class="collapse-item" href="{{ route('admin.verifikasiModul') }}">Verif Pembelian Modul</a>
             </div>
         </div>
@@ -52,7 +52,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
                 <a class="collapse-item" href="{{ route('admin.penyimpananBerkas.index') }}">Penyimpanan Berkas</a>
-                <a class="collapse-item" href="{{ route('admin.verifikasiBerkas') }}">Verif Berkas</a>
+                <a class="collapse-item" href="{{ route('admin.verifikasiBerkas.view') }}">Verif Berkas</a>
             </div>
         </div>
     </li>

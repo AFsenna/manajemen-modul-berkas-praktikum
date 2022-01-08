@@ -51,10 +51,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($modul as $row)
+                        @foreach ($modul as $key => $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $row->idPraktikum }}</td>
+                                <td>{{ $praktikum[$key]->nama . ' ' . $praktikum[$key]->tahun }}</td>
                                 <td>Rp. {{ number_format($row->harga, 2, ',', '.') }}</td>
                                 <td>
                                     <a href="https://drive.google.com/uc?id={{ $row->id_file }}&export=media"
@@ -123,11 +123,6 @@
                 });
             });
         });
-
-        $('.custom-file-input').on('change', function() {
-            let fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
     </script>
 @endpush
 
@@ -180,7 +175,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Tambah Data</button>
+                        <button type="submit" onclick="kirim()" class="btn btn-primary">Tambah Data</button>
                     </div>
                 </form>
             </div>
@@ -244,7 +239,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                            <button type="submit" onclick="kirim()" class="btn btn-primary">Simpan Data</button>
                         </div>
                     </form>
                 </div>

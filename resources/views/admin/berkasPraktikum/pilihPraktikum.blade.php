@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    <button type="submit" class="btn btn-primary">Lanjut</button>
+                    <button type="submit" onclick="kirim()" class="btn btn-primary">Lanjut</button>
                 </div>
             </form>
         </div>

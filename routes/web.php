@@ -17,6 +17,7 @@ use App\Http\Controllers\admin\{
     AuthController as AuthControllerAdmin,
     DashboardController as DashboardControllerAdmin,
     berkas\PenyimpananBerkas as PenyimpananBerkasControllerAdmin,
+    berkas\VerifikasiBerkas as VerifikasiBerkasControllerAdmin,
     modul\PenyimpananModulController as PenyimpananModulControllerAdmin,
     modul\JadwalModulController as JadwalModulControllerAdmin,
 };
@@ -26,6 +27,7 @@ use App\Http\Controllers\praktikan\{
     DashboardController as DashboardControllerPraktikan,
     berkas\BerkasPraktikumController as BerkasPraktikumPraktikan,
 };
+
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -69,10 +71,7 @@ Route::get('/logout-praktikan', [AuthControllerPraktikan::class, 'logout'])->nam
 
 Route::middleware(['role:1'])->name('praktikan.')->group(function () {
     Route::get('/dashboard-praktikan', DashboardControllerPraktikan::class)->name('dashboard');
-    //group route berkas praktikum
     Route::resource('/berkas-praktikum', BerkasPraktikumPraktikan::class);
-    Route::get('/berkasPraktikum', [BerkasPraktikumPraktikan::class, 'getPraktikumJson'])->name('berkasPraktikum.getPraktikumJson');
-    //end group route berkas praktikum
 });
 
 Route::middleware(['role:0'])->name('admin.')->group(function () {
@@ -83,15 +82,20 @@ Route::middleware(['role:0'])->name('admin.')->group(function () {
     Route::get('/penyimpananModul/getpraktikum', [PenyimpananModulControllerAdmin::class, 'getPraktikumJson'])->name('penyimpananModul.getPraktikumJson');
     //end group route penyimpanan modul
 
-    Route::resource('/jadwalModul', JadwalModulControllerAdmin::class);
+    Route::resource('/jadwal-modul', JadwalModulControllerAdmin::class);
 
     Route::get('/verifikasi-modul', function () {
         return view('admin.modulPraktikum.verifikasiModul');
     })->name('verifikasiModul');
 
-    Route::resource('/penyimpananBerkas', PenyimpananBerkasControllerAdmin::class);
+    Route::group(['prefix' => 'penyimpanan-berkas', 'as' => 'penyimpananBerkas.'], function () {
+        Route::get('/', [PenyimpananBerkasControllerAdmin::class, 'index'])->name('index');
+        Route::post('/', [PenyimpananBerkasControllerAdmin::class, 'store'])->name('store');
+    });
 
-    Route::get('/verifikasi-berkas', function () {
-        return view('berkasPraktikum.verifikasiBerkas');
-    })->name('verifikasiBerkas');
+    Route::group(['prefix' => 'verifikasi-berkas', 'as' => 'verifikasiBerkas.'], function () {
+        Route::get('/', [VerifikasiBerkasControllerAdmin::class, 'index'])->name('view');
+        Route::post('/verifikasi/{id}', [VerifikasiBerkasControllerAdmin::class, 'verifikasi'])->name('verifikasi');
+        Route::post('/tolak/{id}', [VerifikasiBerkasControllerAdmin::class, 'tolak'])->name('tolak');
+    });
 });

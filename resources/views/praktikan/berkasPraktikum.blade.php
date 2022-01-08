@@ -8,13 +8,6 @@
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('node_modules/select2/dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('node_modules/selectric/public/selectric.css') }}">
-    <style>
-        .kwitansi:hover {
-            width: 400px;
-            height: 500px;
-        }
-
-    </style>
 @endpush
 
 @section('content')
@@ -148,11 +141,6 @@
         $(document).ready(function() {
             $('.select2').select2();
         });
-
-        $('.custom-file-input').on('change', function() {
-            let fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
     </script>
 @endpush
 
@@ -176,7 +164,7 @@
                             <select name="idPraktikum" id="nama_praktikumtambah" class="form-control select2"
                                 style="width: 100%; height:100%">
                                 <option value="" disabled selected>-- Pilih Praktikum --</option>
-                                @foreach ($praktikum as $row)
+                                @foreach ($praktikumAktif as $row)
                                     <option value="{{ $row->id }}">{{ $row->nama . ' ' . $row->tahun }}</option>
                                 @endforeach
                             </select>
@@ -208,7 +196,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Tambah Data</button>
+                        <button type="submit" onclick="kirim()" class="btn btn-primary">Tambah Data</button>
                     </div>
                 </form>
             </div>
@@ -238,7 +226,7 @@
                                 <select name="idPraktikum" id="nama_praktikumedit" class="form-control select2"
                                     style="width: 100%; height:100%">
                                     <option value="" disabled selected>-- Pilih Praktikum --</option>
-                                    @foreach ($praktikum as $prak)
+                                    @foreach ($praktikumAktif as $prak)
                                         <option value="{{ $prak->id }}"
                                             {{ $prak->id == $row->idPraktikum ? 'selected' : '' }}>
                                             {{ $prak->nama . ' ' . $prak->tahun }}
@@ -274,7 +262,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                            <button type="submit" onclick="kirim()" class="btn btn-primary">Simpan Data</button>
                         </div>
                     </form>
                 </div>

@@ -20,8 +20,26 @@ class PenyimpananModulController extends Controller
     public function index()
     {
         $id = auth()->user()->credential;
-        $pmodul = PenyimpananModul::get()->where('credential', $id);
-        return view('admin.modulPraktikum.penyimpananModul', ['modul' => $pmodul]);
+        $modul = PenyimpananModul::where('credential', $id)->orderBy('idPraktikum', 'ASC')->get();
+        $key = date("Ymd");
+        $arr = [];
+        foreach ($modul as $row) {
+            $arr[] = $row->idPraktikum;
+        }
+        $client = new Client();
+        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/getPraktikumByID', [
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ],
+            'body' => json_encode(
+                [
+                    'key' => $key,
+                    'idPraktikum' => $arr,
+                ]
+            )
+        ]);
+        $praktikum = json_decode($response->getBody()->getContents());
+        return view('admin.modulPraktikum.penyimpananModul', compact('modul', 'praktikum'));
     }
 
     public function getPraktikumJson()

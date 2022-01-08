@@ -12,6 +12,11 @@ class BerkasPraktikum extends Model
     public $primaryKey = 'id_berkasPrak';
 
     protected $fillable = [
-        'idPraktikum', 'idKwitansi', 'idPendaftaran', 'idKRS', 'status', 'name', 'npm'
+        'idPraktikum', 'idKwitansi', 'idPendaftaran', 'idKRS', 'status', 'idUser',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'idUser');
+    }
 }

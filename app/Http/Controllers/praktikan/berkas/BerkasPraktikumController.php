@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\BerkasPraktikum;
+use Illuminate\Validation\Rule;
 
 class BerkasPraktikumController extends Controller
 {
@@ -19,15 +20,17 @@ class BerkasPraktikumController extends Controller
      */
     public function index()
     {
-        $id = auth()->user()->credential;
-        $berkasPrak = BerkasPraktikum::where('npm', $id)->orderBy('idPraktikum', 'ASC')->get();
+        $id = auth()->user()->id;
+        $berkasPrak = BerkasPraktikum::where('idUser', $id)->orderBy('idPraktikum', 'ASC')->get();
         $key = date("Ymd");
         $arr = [];
         foreach ($berkasPrak as $row) {
             $arr[] = $row->idPraktikum;
         }
-        // dd($arr);
         $client = new Client();
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktifAll?key=$key");
+        $praktikumAktif = json_decode($response->getBody()->getContents());
+
         $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/getPraktikumByID', [
             'headers' => [
                 'Content-Type' => 'application/json'
@@ -40,17 +43,7 @@ class BerkasPraktikumController extends Controller
             )
         ]);
         $praktikum = json_decode($response->getBody()->getContents());
-        // dd($praktikum);
-        return view('praktikan.berkasPraktikum', compact('berkasPrak', 'praktikum'));
-    }
-
-    public function getPraktikumJson()
-    {
-        $client = new Client();
-        $key = date("Ymd");
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktifAll?key=$key");
-        $decodeResponse = json_decode($response->getBody()->getContents());
-        return response()->json($decodeResponse);
+        return view('praktikan.berkasPraktikum', compact('berkasPrak', 'praktikum', 'praktikumAktif'));
     }
 
     /**
@@ -71,8 +64,15 @@ class BerkasPraktikumController extends Controller
      */
     public function store(Request $request)
     {
+        $idPrak = $request->idPraktikum;
+        $idUser = auth()->user()->id;
         $this->validate($request, [
-            'idPraktikum' => 'required|unique:berkasPraktikum,idPraktikum',
+            'idPraktikum' => [
+                "required",
+                Rule::unique('berkasPraktikum')->where(function ($query) use ($idPrak, $idUser) {
+                    return $query->where('idPraktikum', $idPrak)->where('idUser', $idUser);
+                })
+            ],
             'scan_kwitansi' => 'required',
             'pdf_krs' => 'required',
             'pdf_pendaftaran' => 'required',
@@ -103,8 +103,7 @@ class BerkasPraktikumController extends Controller
 
             DB::beginTransaction();
             $berkasPrak =  BerkasPraktikum::create([
-                'name' => auth()->user()->name,
-                'npm' => auth()->user()->credential,
+                'idUser' => auth()->user()->id,
                 'idPraktikum' => $id,
                 'idKwitansi' => $kwitansi['path'],
                 'idPendaftaran' => $pendaftaran['path'],
@@ -156,13 +155,20 @@ class BerkasPraktikumController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $idPrak = $request->idPraktikum;
+        $idUser = auth()->user()->id;
         $berkasPrak =  BerkasPraktikum::find($id);
         $this->validate($request, [
-            'idPraktikum' => "required|unique:berkasPraktikum,idPraktikum,$berkasPrak->id_berkasPrak,id_berkasPrak",
+            'idPraktikum' => [
+                "required",
+                Rule::unique('berkasPraktikum')->where(function ($query) use ($idPrak, $idUser, $berkasPrak) {
+                    return $query->where('idPraktikum', $idPrak)->where('idUser', $idUser)->whereNotIn('id_berkasPrak', [$berkasPrak->id_berkasPrak]);
+                })
+            ],
         ]);
 
         try {
-            Log::info('Request update data modul berisi = ' . json_encode($berkasPrak));
+            Log::info('Request update data berkas berisi = ' . json_encode($berkasPrak));
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 

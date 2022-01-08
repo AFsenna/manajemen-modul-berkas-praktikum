@@ -56,12 +56,8 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            {{-- <h6 class="m-0 font-weight-bold text-primary">Jadwal Pembelian Modul Basis Data 2021</h6> --}}
         </div>
         <div class="card-body">
-            {{-- <div class="text-center bg-danger text-light">
-                Jadwal Pembelian Modul Belum Diatur!
-            </div> --}}
             <center>
                 <div class="card-header bg-primary" style="width:70%;">
                     <h6 class="font-weight-bold text-light">Jadwal Pembelian Modul
@@ -142,7 +138,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Tambah Data</button>
+                        <button type="submit" onclick="kirim()" class="btn btn-primary">Tambah Data</button>
                     </div>
                 </form>
             </div>
@@ -162,7 +158,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('admin.jadwalModul.update', $jadwal == null ? 0 : $jadwal->id_jadwal) }}"
+                    <form action="{{ route('admin.jadwal-modul.update', $jadwal == null ? 0 : $jadwal->id_jadwal) }}"
                         method="POST">
                         @csrf
                         @method('put')
@@ -194,7 +190,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                            <button type="submit" onclick="kirim()" class="btn btn-primary">Simpan Data</button>
                         </div>
                     </form>
                 </div>

@@ -21,17 +21,7 @@ class PenyimpananBerkas extends Controller
         $id = auth()->user()->credential;
         $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAllPraktikum?id=$id&key=$key");
         $praktikum = json_decode($response->getBody()->getContents());
-        return view('admin.penyimpananBerkas.pilihPraktikum', compact('praktikum'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('admin.berkasPraktikum.pilihPraktikum', compact('praktikum'));
     }
 
     /**
@@ -48,51 +38,6 @@ class PenyimpananBerkas extends Controller
         $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
         $praktikumAktif = json_decode($response->getBody()->getContents());
         $berkas = BerkasPraktikum::where('idPraktikum', $id)->get();
-        return view('admin.penyimpananBerkas.showBerkas', compact('praktikumAktif', 'berkas'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return view('admin.berkasPraktikum.showBerkas', compact('praktikumAktif', 'berkas'));
     }
 }

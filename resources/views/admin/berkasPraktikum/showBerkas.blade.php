@@ -6,13 +6,6 @@
 
 @push('css')
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    <style>
-        .kwitansi:hover {
-            width: 450px;
-            height: 500px;
-        }
-
-    </style>
 @endpush
 
 @section('content')
