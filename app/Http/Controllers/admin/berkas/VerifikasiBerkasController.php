@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use App\Exports\BerkasPraktikumExport;
+
 
 class VerifikasiBerkasController extends Controller
 {
@@ -22,7 +24,6 @@ class VerifikasiBerkasController extends Controller
     public function index()
     {
         $client = new Client();
-
         $key = date("Ymd");
         $id = auth()->user()->credential;
         $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
@@ -34,6 +35,12 @@ class VerifikasiBerkasController extends Controller
 
     public function exportExcel()
     {
+        $client = new Client();
+        $key = date("Ymd");
+        $id = auth()->user()->credential;
+        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
+        $praktikumAktif = json_decode($response->getBody()->getContents());
+        return \Excel::download(new BerkasPraktikumExport, 'berkas praktikum ' . $praktikumAktif[0]->nama . $praktikumAktif[0]->tahun . ' ' . $key . '.' . 'xlsx');
     }
 
     public function verifikasi($id)

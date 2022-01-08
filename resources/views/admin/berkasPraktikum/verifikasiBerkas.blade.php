@@ -13,12 +13,12 @@
     <h1 class="h3 text-gray-800">Verifikasi Berkas Praktikum</h1>
 
     <div class="mb-3">
-        <button class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#newBerkas">
+        <a href="{{ route('admin.verifikasiBerkas.export') }}" class="btn btn-primary btn-icon-split">
             <span class="icon text-white-50">
                 <i class="fas fa-download"></i>
             </span>
             <span class="text">Export Excel</span>
-        </button>
+        </a>
     </div>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
