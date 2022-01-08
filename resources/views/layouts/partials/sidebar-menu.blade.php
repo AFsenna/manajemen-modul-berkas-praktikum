@@ -37,7 +37,7 @@
                 {{-- <h6 class="collapse-header">Menu Modul :</h6> --}}
                 <a class="collapse-item" href="{{ route('admin.penyimpanan-modul.index') }}">Penyimpanan Modul</a>
                 <a class="collapse-item" href="{{ route('admin.jadwal-modul.index') }}">Jadwal Pembelian</a>
-                <a class="collapse-item" href="{{ route('admin.verifikasiModul') }}">Verif Pembelian Modul</a>
+                <a class="collapse-item" href="{{ route('admin.verifikasiModul.view') }}">Verif Pembelian Modul</a>
             </div>
         </div>
     </li>

@@ -12,7 +12,7 @@ class BerkasPraktikum extends Model
     public $primaryKey = 'id_berkasPrak';
 
     protected $fillable = [
-        'idPraktikum', 'idKwitansi', 'idPendaftaran', 'idKRS', 'status', 'idUser',
+        'idPraktikum', 'idKwitansi', 'idPendaftaran', 'idKRS', 'status', 'idUser', 'statusModul'
     ];
 
     public function users()

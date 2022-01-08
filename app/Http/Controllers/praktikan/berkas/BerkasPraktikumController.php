@@ -109,6 +109,7 @@ class BerkasPraktikumController extends Controller
                 'idPendaftaran' => $pendaftaran['path'],
                 'idKRS' => $krs['path'],
                 'status' => 0,
+                'statusModul' => 0,
             ]);
             Log::info("Data berkas baru = " . json_encode($berkasPrak));
             DB::commit();

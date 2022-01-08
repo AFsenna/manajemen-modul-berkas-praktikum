@@ -7,7 +7,7 @@ use App\Models\BerkasPraktikum;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 
-class PenyimpananBerkas extends Controller
+class PenyimpananBerkasController extends Controller
 {
     /**
      * Display a listing of the resource.

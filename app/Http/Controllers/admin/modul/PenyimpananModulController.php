@@ -39,17 +39,10 @@ class PenyimpananModulController extends Controller
             )
         ]);
         $praktikum = json_decode($response->getBody()->getContents());
-        return view('admin.modulPraktikum.penyimpananModul', compact('modul', 'praktikum'));
-    }
 
-    public function getPraktikumJson()
-    {
-        $client = new Client();
-        $key = date("Ymd");
-        $id = auth()->user()->credential;
         $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAllPraktikum?id=$id&key=$key");
-        $decodeResponse = json_decode($response->getBody()->getContents());
-        return response()->json($decodeResponse);
+        $praktikumAll = json_decode($response->getBody()->getContents());
+        return view('admin.modulPraktikum.penyimpananModul', compact('modul', 'praktikum', 'praktikumAll'));
     }
 
     /**

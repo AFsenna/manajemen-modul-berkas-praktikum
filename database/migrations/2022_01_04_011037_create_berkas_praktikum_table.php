@@ -21,6 +21,7 @@ class CreateBerkasPraktikumTable extends Migration
             $table->string('idPendaftaran');
             $table->string('idKRS');
             $table->integer('status')->comment('0 belum disetujui | 1 disetujui | 2 ditolak');
+            $table->integer('statusModul')->comment('0 belum dibeli | 1 lunas');
             $table->timestamps();
         });
     }

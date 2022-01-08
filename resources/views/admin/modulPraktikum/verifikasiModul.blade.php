@@ -30,21 +30,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Alexandria Felicia Seanne</td>
-                            <td>06.2019.1.07103</td>
-                            <td>
-                                <div class="badge badge-pill badge-success" style="min-width: 100px; font-size:15px">
-                                    Lunas
-                                </div>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger mb-2">
-                                    Batalkan
-                                </button>
-                            </td>
-                        </tr>
+                        @foreach ($berkas as $row)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $row->users->name }}</td>
+                                <td>{{ $row->users->credential }}</td>
+                                <td>
+                                    @if ($row->statusModul == 1)
+                                        <div class="badge badge-pill badge-success" style="min-width: 100px; font-size:15px">
+                                            Lunas
+                                        </div>
+                                    @else
+                                        <div class="badge badge-pill badge-danger" style="min-width: 100px; font-size:15px">
+                                            Belum Dibeli
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($row->statusModul == 1)
+                                        <form action="{{ route('admin.verifikasiModul.batalkan', $row->id_berkasPrak) }}"
+                                            method="POST" class="d-inline" id="form-undo-{{ $row->id_berkasPrak }}">
+                                            @csrf
+                                            <button type="button" class="btn btn-danger btn-sm mb-2"
+                                                onclick="batalkan({{ $row->id_berkasPrak }})">
+                                                <span class="icon text-white">
+                                                    Batalkan
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form
+                                            action="{{ route('admin.verifikasiModul.verifikasi', $row->id_berkasPrak) }}"
+                                            method="POST" class="d-inline"
+                                            id="form-verif-{{ $row->id_berkasPrak }}">
+                                            @csrf
+                                            <button type="button" class="btn btn-success btn-sm mb-2"
+                                                onclick="verif({{ $row->id_berkasPrak }})">
+                                                <span class="icon text-white">
+                                                    Verifikasi
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

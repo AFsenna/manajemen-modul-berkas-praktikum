@@ -123,53 +123,9 @@
     {{-- Message Toast --}}
     @include('layouts.partials.toastMessage')
 
+    @include('layouts.partials.sweetAlert')
+
     <script>
-        function hapus(id) {
-            // e.preventDefault(); // prevent form 
-            swal({
-                    title: 'Apakah Anda Yakin ?',
-                    text: 'Jika terhapus, maka data tidak dapat di kembalikan !',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $('#form-delete-' + id).submit();
-                    } else {
-                        swal("Cancelled", "Tidak jadi hapus data :)", "error");
-                    }
-                });
-        }
-
-        function kirim() {
-            // $('.btn').addClass('disabled');
-            swal({
-                // title: "",
-                // text: "Please wait...",
-                icon: "https://upload.wikimedia.org/wikipedia/commons/5/54/Ajux_loader.gif",
-                buttons: false,
-                closeOnClickOutside: false,
-                //icon: "success"
-            });
-        }
-
-        function verif(id) {
-            swal("Yakin berkas sudah sesuai?", {
-                buttons: ["Belum", "Ya"],
-                confirmButtonText: 'Ya',
-                showCancelButton: true,
-                closeOnClickOutside: false,
-            }).then((willVerif) => {
-                if (willVerif) {
-                    $('#form-verif-' + id).submit();
-                    kirim();
-                } else {
-                    swal("Cancelled", "Verifikasi Dibatalkan :)", "error");
-                }
-            })
-        }
-
         $('.custom-file-input').on('change', function() {
             let fileName = $(this).val().split('\\').pop();
             $(this).next('.custom-file-label').addClass("selected").html(fileName);

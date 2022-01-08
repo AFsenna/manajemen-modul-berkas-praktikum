@@ -12,7 +12,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
-class VerifikasiBerkas extends Controller
+class VerifikasiBerkasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -32,6 +32,10 @@ class VerifikasiBerkas extends Controller
     }
 
 
+    public function exportExcel()
+    {
+    }
+
     public function verifikasi($id)
     {
         $berkasPrak =  BerkasPraktikum::find($id);
@@ -47,6 +51,10 @@ class VerifikasiBerkas extends Controller
             $praktikumAktif = json_decode($response->getBody()->getContents());
 
             $jadwal = JadwalModul::where('idPraktikum', $praktikumAktif[0]->id)->first();
+
+            if ($jadwal == null) {
+                return redirect()->route('admin.verifikasiBerkas.view')->with(['jenis' => 'error', 'pesan' => 'Silahkan Atur Jadwal Pembelian Modul Dahulu']);
+            }
 
             $response = $client->request('GET', 'https://labinformatika.itats.ac.id/api/getAslabByID?id=' . $jadwal->idAslab . '&key=' . $key);
             $aslab = json_decode($response->getBody()->getContents());
