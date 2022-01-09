@@ -69,7 +69,7 @@ class BerkasPraktikumController extends Controller
         $this->validate($request, [
             'idPraktikum' => [
                 "required",
-                Rule::unique('berkasPraktikum')->where(function ($query) use ($idPrak, $idUser) {
+                Rule::unique('berkaspraktikum')->where(function ($query) use ($idPrak, $idUser) {
                     return $query->where('idPraktikum', $idPrak)->where('idUser', $idUser);
                 })
             ],
@@ -162,7 +162,7 @@ class BerkasPraktikumController extends Controller
         $this->validate($request, [
             'idPraktikum' => [
                 "required",
-                Rule::unique('berkasPraktikum')->where(function ($query) use ($idPrak, $idUser, $berkasPrak) {
+                Rule::unique('berkaspraktikum')->where(function ($query) use ($idPrak, $idUser, $berkasPrak) {
                     return $query->where('idPraktikum', $idPrak)->where('idUser', $idUser)->whereNotIn('id_berkasPrak', [$berkasPrak->id_berkasPrak]);
                 })
             ],
