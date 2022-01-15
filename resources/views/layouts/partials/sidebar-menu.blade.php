@@ -24,7 +24,7 @@
             <span>Berkas Praktikum</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('praktikan.berkas-praktikum.index') }}">
+        <a class="nav-link" href="{{ route('praktikan.modul') }}">
             <i class="fas fa-fw fa-book"></i>
             <span>Modul Praktikum</span></a>
     </li>
