@@ -8,10 +8,10 @@ use App\Models\BerkasPraktikum;
 use App\Models\JadwalModul;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Exports\BerkasPraktikumExport;
+use app\Helpers\ApiLabinfor;
 
 
 class VerifikasiBerkasController extends Controller
@@ -23,23 +23,16 @@ class VerifikasiBerkasController extends Controller
      */
     public function index()
     {
-        $client = new Client();
-        $key = date("Ymd");
-        $id = auth()->user()->credential;
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
-        $praktikumAktif = json_decode($response->getBody()->getContents());
+        $praktikumAktif = ApiLabinfor::getPraktikumAktif();
         $berkas = BerkasPraktikum::where('idPraktikum', $praktikumAktif[0]->id)->get();
-        return view('admin.berkasPraktikum.verifikasiBerkas', compact('berkas'));
+        return view('admin.berkasPraktikum.verifikasiBerkas', compact('berkas', 'praktikumAktif'));
     }
 
 
     public function exportExcel()
     {
-        $client = new Client();
         $key = date("Ymd");
-        $id = auth()->user()->credential;
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
-        $praktikumAktif = json_decode($response->getBody()->getContents());
+        $praktikumAktif = ApiLabinfor::getPraktikumAktif();
         return \Excel::download(new BerkasPraktikumExport, 'berkas praktikum ' . $praktikumAktif[0]->nama . $praktikumAktif[0]->tahun . ' ' . $key . '.' . 'xlsx');
     }
 
@@ -50,12 +43,8 @@ class VerifikasiBerkasController extends Controller
             Log::info('Request verifikasi data berkas berisi = ' . json_encode($berkasPrak));
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
-            $client = new Client();
 
-            $key = date("Ymd");
-            $id = auth()->user()->credential;
-            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
-            $praktikumAktif = json_decode($response->getBody()->getContents());
+            $praktikumAktif = ApiLabinfor::getPraktikumAktif();
 
             $jadwal = JadwalModul::where('idPraktikum', $praktikumAktif[0]->id)->first();
 
@@ -63,8 +52,7 @@ class VerifikasiBerkasController extends Controller
                 return redirect()->route('admin.verifikasiBerkas.view')->with(['jenis' => 'error', 'pesan' => 'Silahkan Atur Jadwal Pembelian Modul Dahulu']);
             }
 
-            $response = $client->request('GET', 'https://labinformatika.itats.ac.id/api/getAslabByID?id=' . $jadwal->idAslab . '&key=' . $key);
-            $aslab = json_decode($response->getBody()->getContents());
+            $aslab = ApiLabinfor::getAslabByID($jadwal->idAslab);
 
 
             DB::beginTransaction();
@@ -84,7 +72,7 @@ class VerifikasiBerkasController extends Controller
                 'status' => $berkasPrak->status,
             ];
 
-            Mail::to("fgelicia@gmail.com")->send(new EmailGoogle($details));
+            Mail::to("michaelaraona@gmail.com")->send(new EmailGoogle($details));
 
             Log::info("SUCCESS");
             DB::commit();
@@ -108,12 +96,9 @@ class VerifikasiBerkasController extends Controller
             Log::info('Request tolak data berkas berisi = ' . json_encode($berkasPrak));
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
-            $client = new Client();
 
-            $key = date("Ymd");
-            $id = auth()->user()->credential;
-            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
-            $praktikumAktif = json_decode($response->getBody()->getContents());
+            $praktikumAktif = ApiLabinfor::getPraktikumAktif();
+
             DB::beginTransaction();
             $berkasPrak->update([
                 'status' => 2,
@@ -125,7 +110,8 @@ class VerifikasiBerkasController extends Controller
                 'status' => $berkasPrak->status,
             ];
 
-            Mail::to("fgelicia@gmail.com")->send(new EmailGoogle($details));
+            Mail::to("michaelaraona@gmail.com")->send(new EmailGoogle($details));
+
             Log::info("SUCCESS");
             DB::commit();
 
@@ -137,6 +123,45 @@ class VerifikasiBerkasController extends Controller
             Log::error("Error tolak data berkas = " . $exception->getTraceAsString());
 
             return redirect()->route('admin.verifikasiBerkas.view')->with(['jenis' => 'error', 'pesan' => 'Berkas Gagal Ditolak!']);
+        }
+    }
+
+    public function batalkan($id)
+    {
+        $berkasPrak =  BerkasPraktikum::find($id);
+        try {
+            Log::info('Request tolak data berkas berisi = ' . json_encode($berkasPrak));
+            Log::info("Data User = " . json_encode(auth()->user()));
+            Log::info('Start');
+
+            DB::beginTransaction();
+
+            $berkasPrak->update([
+                'status' => 0,
+            ]);
+
+            $id = auth()->user()->credential;
+            $praktikumAktif = ApiLabinfor::getPraktikumAktif($id);
+
+            $details = [
+                'title' => 'Berkas Pendaftaran Praktikum Ditolak',
+                'body' => 'Status berkas pendaftaran praktikum anda berubah menjadi menunggu verifikasi oleh ' . auth()->user()->name,
+                'subject' => 'Informasi Praktikum ' . $praktikumAktif[0]->nama . ' ' . $praktikumAktif[0]->tahun,
+                'status' => $berkasPrak->status,
+            ];
+
+            Mail::to("michaelaraona@gmail.com")->send(new EmailGoogle($details));
+            Log::info("SUCCESS");
+            DB::commit();
+
+            return redirect()->route('admin.verifikasiBerkas.view')->with(['jenis' => 'success', 'pesan' => 'Berkas tidak jadi ditolak!']);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("Error tolak data berkas = " . $exception->getMessage());
+            Log::error("Error tolak data berkas = " . $exception->getFile());
+            Log::error("Error tolak data berkas = " . $exception->getTraceAsString());
+
+            return redirect()->route('admin.verifikasiBerkas.view')->with(['jenis' => 'error', 'pesan' => 'Berkas Gagal Batal Ditolak!']);
         }
     }
 }

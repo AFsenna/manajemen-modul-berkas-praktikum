@@ -5,10 +5,10 @@ namespace App\Http\Controllers\admin\modul;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\PenyimpananModul;
+use app\Helpers\ApiLabinfor;
 
 class PenyimpananModulController extends Controller
 {
@@ -21,27 +21,13 @@ class PenyimpananModulController extends Controller
     {
         $id = auth()->user()->credential;
         $modul = PenyimpananModul::where('credential', $id)->orderBy('idPraktikum', 'ASC')->get();
-        $key = date("Ymd");
         $arr = [];
+
         foreach ($modul as $row) {
             $arr[] = $row->idPraktikum;
         }
-        $client = new Client();
-        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/getPraktikumByID', [
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode(
-                [
-                    'key' => $key,
-                    'idPraktikum' => $arr,
-                ]
-            )
-        ]);
-        $praktikum = json_decode($response->getBody()->getContents());
-
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAllPraktikum?id=$id&key=$key");
-        $praktikumAll = json_decode($response->getBody()->getContents());
+        $praktikum = ApiLabinfor::getPraktikumByID($arr);
+        $praktikumAll = ApiLabinfor::getAllPraktikum();
         return view('admin.modulPraktikum.penyimpananModul', compact('modul', 'praktikum', 'praktikumAll'));
     }
 
@@ -74,11 +60,8 @@ class PenyimpananModulController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
-            $client = new Client();
-            $key = date("Ymd");
-            $id = $request->idPraktikum;
-            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
-            $praktikum = json_decode($response->getBody()->getContents());
+            $praktikum = ApiLabinfor::getPraktikum($request->idPraktikum);
+
             $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
 
             Storage::disk("google")->putFileAs("", $request->file("file_modul"), "$namaPraktikum");
@@ -148,11 +131,8 @@ class PenyimpananModulController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
-            $client = new Client();
-            $key = date("Ymd");
-            $id = $request->idPraktikum;
-            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
-            $praktikum = json_decode($response->getBody()->getContents());
+            $praktikum = ApiLabinfor::getPraktikum($request->idPraktikum);
+
             $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
 
             if ($request->file("file_modul")) {

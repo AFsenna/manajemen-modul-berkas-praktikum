@@ -11,11 +11,19 @@
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 text-gray-800">Verifikasi Pembelian Modul</h1>
-
+    <div class="mb-3">
+        <a href="{{ route('admin.verifikasiModul.export') }}" class="btn btn-primary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-download"></i>
+            </span>
+            <span class="text">Export Excel</span>
+        </a>
+    </div>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Verifikasi Modul Pemrograman Terstruktur 2021</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Verifikasi Modul
+                {{ $praktikumAktif[0]->nama . ' ' . $praktikumAktif[0]->tahun }}</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -37,7 +45,8 @@
                                 <td>{{ $row->users->credential }}</td>
                                 <td>
                                     @if ($row->statusModul == 1)
-                                        <div class="badge badge-pill badge-success" style="min-width: 100px; font-size:15px">
+                                        <div class="badge badge-pill badge-success"
+                                            style="min-width: 100px; font-size:15px">
                                             Lunas
                                         </div>
                                     @else

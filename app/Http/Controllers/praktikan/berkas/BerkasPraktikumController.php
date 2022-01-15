@@ -5,7 +5,7 @@ namespace App\Http\Controllers\praktikan\berkas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use GuzzleHttp\Client;
+use app\Helpers\ApiLabinfor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\BerkasPraktikum;
@@ -22,27 +22,14 @@ class BerkasPraktikumController extends Controller
     {
         $id = auth()->user()->id;
         $berkasPrak = BerkasPraktikum::where('idUser', $id)->orderBy('idPraktikum', 'ASC')->get();
-        $key = date("Ymd");
+
         $arr = [];
         foreach ($berkasPrak as $row) {
             $arr[] = $row->idPraktikum;
         }
-        $client = new Client();
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktifAll?key=$key");
-        $praktikumAktif = json_decode($response->getBody()->getContents());
 
-        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/getPraktikumByID', [
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode(
-                [
-                    'key' => $key,
-                    'idPraktikum' => $arr,
-                ]
-            )
-        ]);
-        $praktikum = json_decode($response->getBody()->getContents());
+        $praktikumAktif = ApiLabinfor::getPraktikumAktifAll();
+        $praktikum = ApiLabinfor::getPraktikumByID($arr);
         return view('praktikan.berkasPraktikum', compact('berkasPrak', 'praktikum', 'praktikumAktif'));
     }
 
@@ -83,11 +70,9 @@ class BerkasPraktikumController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
-            $client = new Client();
-            $key = date("Ymd");
             $id = $request->idPraktikum;
-            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
-            $praktikum = json_decode($response->getBody()->getContents());
+            $praktikum = ApiLabinfor::getPraktikum($id);
+
             $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
             $namaFile = auth()->user()->name . '_' . auth()->user()->npm . '_' . $namaPraktikum;
 
@@ -173,11 +158,8 @@ class BerkasPraktikumController extends Controller
             Log::info("Data User = " . json_encode(auth()->user()));
             Log::info('Start');
 
-            $client = new Client();
-            $key = date("Ymd");
             $id = $request->idPraktikum;
-            $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikum?id=$id&key=$key");
-            $praktikum = json_decode($response->getBody()->getContents());
+            $praktikum = ApiLabinfor::getPraktikum($id);
             $namaPraktikum = $praktikum[0]->nama . ' ' . $praktikum[0]->tahun;
             $namaFile = auth()->user()->name . '_' . auth()->user()->npm . '_' . $namaPraktikum;
 

@@ -6,6 +6,7 @@ use App\Models\BerkasPraktikum;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use app\Helpers\ApiLabinfor;
 
 class BerkasPraktikumExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -14,7 +15,8 @@ class BerkasPraktikumExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection()
     {
-        return BerkasPraktikum::all();
+        $praktikumAktif = ApiLabinfor::getPraktikumAktif();
+        return BerkasPraktikum::where('idPraktikum', $praktikumAktif[0]->id)->get();
     }
 
     public function headings(): array

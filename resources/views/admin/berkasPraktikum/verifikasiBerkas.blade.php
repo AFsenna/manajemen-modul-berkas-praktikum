@@ -23,7 +23,8 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Verifikasi Modul Pemrograman Terstruktur 2021</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Verifikasi Berkas
+                {{ $praktikumAktif[0]->nama . ' ' . $praktikumAktif[0]->tahun }}</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -108,7 +109,18 @@
                                                 Tolak
                                             </span>
                                         </button>
-                                    @elseif ($row->status == 1 || $row->status == 2)
+                                    @elseif ($row->status == 2)
+                                        <form
+                                            action="{{ route('admin.verifikasiBerkas.batalkan', $row->id_berkasPrak) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm mb-2">
+                                                <span class="icon text-white">
+                                                    batalkan
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @else
                                         <center>
                                             -
                                         </center>

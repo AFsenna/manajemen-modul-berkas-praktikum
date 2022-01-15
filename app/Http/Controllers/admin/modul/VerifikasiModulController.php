@@ -4,9 +4,10 @@ namespace App\Http\Controllers\admin\modul;
 
 use App\Http\Controllers\Controller;
 use App\Models\BerkasPraktikum;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use app\Helpers\ApiLabinfor;
+use App\Exports\ModulPraktikumExport;
 
 class VerifikasiModulController extends Controller
 {
@@ -17,14 +18,17 @@ class VerifikasiModulController extends Controller
      */
     public function index()
     {
-        $client = new Client();
+        $praktikumAktif = ApiLabinfor::getPraktikumAktif();
 
-        $key = date("Ymd");
-        $id = auth()->user()->credential;
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
-        $praktikumAktif = json_decode($response->getBody()->getContents());
         $berkas = BerkasPraktikum::where('idPraktikum', $praktikumAktif[0]->id)->where('status', 1)->get();
-        return view('admin.modulPraktikum.verifikasiModul', compact('berkas'));
+        return view('admin.modulPraktikum.verifikasiModul', compact('berkas', 'praktikumAktif'));
+    }
+
+    public function exportExcel()
+    {
+        $key = date("Ymd");
+        $praktikumAktif = ApiLabinfor::getPraktikumAktif();
+        return \Excel::download(new ModulPraktikumExport, 'modul praktikum ' . $praktikumAktif[0]->nama . $praktikumAktif[0]->tahun . ' ' . $key . '.' . 'xlsx');
     }
 
     public function verifikasi($id)

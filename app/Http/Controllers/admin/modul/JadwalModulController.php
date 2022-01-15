@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin\modul;
 use App\Http\Controllers\Controller;
 use App\Models\JadwalModul;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
+use app\Helpers\ApiLabinfor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -18,21 +18,13 @@ class JadwalModulController extends Controller
      */
     public function index()
     {
-        $client = new Client();
-
-        $key = date("Ymd");
-        $id = auth()->user()->credential;
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getPraktikumAktif?id=$id&key=$key");
-        $praktikumAktif = json_decode($response->getBody()->getContents());
-
-        $response = $client->request('GET', "https://labinformatika.itats.ac.id/api/getAslabAktif?id=$id&key=$key");
-        $aslabAktif = json_decode($response->getBody()->getContents());
+        $praktikumAktif = ApiLabinfor::getPraktikumAktif();
+        $aslabAktif = ApiLabinfor::getAslabAktif();
 
         $jadwal = JadwalModul::where('idPraktikum', $praktikumAktif[0]->id)->first();
 
         if ($jadwal) {
-            $response = $client->request('GET', 'https://labinformatika.itats.ac.id/api/getAslabByID?id=' . $jadwal->idAslab . '&key=' . $key);
-            $aslab = json_decode($response->getBody()->getContents());
+            $aslab = ApiLabinfor::getAslabByID($jadwal->idAslab);
         } else {
             $aslab = null;
         }

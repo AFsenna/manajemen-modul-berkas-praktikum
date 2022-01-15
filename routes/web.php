@@ -84,7 +84,7 @@ Route::middleware(['role:0'])->name('admin.')->group(function () {
 
     Route::group(['prefix' => 'verifikasi-modul', 'as' => 'verifikasiModul.'], function () {
         Route::get('/', [VerifikasiModulControllerAdmin::class, 'index'])->name('view');
-        // Route::get('/exportExcel', [VerifikasiModulControllerAdmin::class, 'exportExcel'])->name('export');
+        Route::get('/exportExcel', [VerifikasiModulControllerAdmin::class, 'exportExcel'])->name('export');
         Route::post('/verifikasi/{id}', [VerifikasiModulControllerAdmin::class, 'verifikasi'])->name('verifikasi');
         Route::post('/batalkan/{id}', [VerifikasiModulControllerAdmin::class, 'batalkan'])->name('batalkan');
     });
@@ -99,5 +99,6 @@ Route::middleware(['role:0'])->name('admin.')->group(function () {
         Route::get('/exportExcel', [VerifikasiBerkasControllerAdmin::class, 'exportExcel'])->name('export');
         Route::post('/verifikasi/{id}', [VerifikasiBerkasControllerAdmin::class, 'verifikasi'])->name('verifikasi');
         Route::post('/tolak/{id}', [VerifikasiBerkasControllerAdmin::class, 'tolak'])->name('tolak');
+        Route::post('/batalkan/{id}', [VerifikasiBerkasControllerAdmin::class, 'batalkan'])->name('batalkan');
     });
 });

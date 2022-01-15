@@ -32,7 +32,7 @@ class EmailGoogle extends Mailable
     {
         if ($this->details['status'] == 1) {
             return $this->subject($this->details['subject'])->view('layouts.templateEmail.jadwal');
-        } else if ($this->details['status'] == 2) {
+        } else if ($this->details['status'] == 2 || $this->details['status'] == 0) {
             return $this->subject($this->details['subject'])->view('layouts.templateEmail.tolak');
         }
     }

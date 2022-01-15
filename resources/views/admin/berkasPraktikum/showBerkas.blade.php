@@ -43,8 +43,8 @@
                         @foreach ($berkas as $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>Alexandria Felicia Seanne</td>
-                                <td>06.2019.1.07103</td>
+                                <td>{{ $row->users->name }}</td>
+                                <td>{{ $row->users->credential }}</td>
                                 <td>
                                     <img class="kwitansi"
                                         src="https://drive.google.com/uc?export=view&id={{ $row->idKwitansi }}"

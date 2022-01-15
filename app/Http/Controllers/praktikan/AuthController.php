@@ -4,7 +4,7 @@ namespace App\Http\Controllers\praktikan;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use GuzzleHttp\Client;
+use app\Helpers\ApiLabinfor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,22 +45,10 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        $client = new Client();
-        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/login-praktikan', [
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode(
-                [
-                    'npm' => $request->npm,
-                    'password' => $request->password,
-                ]
-            )
-        ]);
+        $login = ApiLabinfor::loginAdmin($request->npm, $request->password);
 
-        $decodeResponse = json_decode($response->getBody()->getContents());
-        if ($decodeResponse->status != "failed") {
-            $data =  $decodeResponse->users;
+        if ($login->status != "failed") {
+            $data =  $login->users;
             $praktikan = User::where('role', 1)->where('credential', $data[0])->first();
             if (is_null($praktikan)) {
                 $praktikan = User::create([

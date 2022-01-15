@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use GuzzleHttp\Client;
+use app\Helpers\ApiLabinfor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,22 +44,10 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        $client = new Client();
-        $response = $client->request('POST', 'https://labinformatika.itats.ac.id/api/login-admin', [
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode(
-                [
-                    'username' => $request->username,
-                    'password' => $request->password,
-                ]
-            )
-        ]);
+        $login = ApiLabinfor::loginAdmin($request->username, $request->password);
 
-        $decodeResponse = json_decode($response->getBody()->getContents());
-        if ($decodeResponse->status != "failed") {
-            $data =  $decodeResponse->users;
+        if ($login->status != "failed") {
+            $data =  $login->users;
             $admin = User::where('role', 0)->where('credential', $data[2])->first();
             if (is_null($admin)) {
                 $admin = User::create([
