@@ -123,8 +123,9 @@
                     <h6 class="m-0 font-weight-bold text-primary">Alur Penyelesaian Pendaftaran</h6>
                 </div>
                 <div class="card-body">
-                    <p>1. Upload berkas pendaftaran praktikum anda di menu <span class="text-info">Berkas
-                            Praktikum</span>.</p>
+                    <p>1. Upload berkas pendaftaran praktikum anda di menu <a
+                            href="{{ route('praktikan.berkas-praktikum.index') }}" class="text-info">Berkas
+                            Praktikum</a>.</p>
                     <p>2. Asisten Lab akan menyetujui berkas anda jika benar dan akan mengembalikan jika masih ada yang
                         salah.</p>
                     <p>3. Jika disetujui maka aslab akan mengirimkan informasi via email dan telegram untuk jadwal

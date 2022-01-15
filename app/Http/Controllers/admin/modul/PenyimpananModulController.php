@@ -70,7 +70,7 @@ class PenyimpananModulController extends Controller
 
             DB::beginTransaction();
             $pmodul =  PenyimpananModul::create([
-                'idPraktikum' => $id,
+                'idPraktikum' => $request->idPraktikum,
                 'harga' => $request->harga_modul,
                 'credential' => auth()->user()->credential,
                 'id_file' => $result['path'],

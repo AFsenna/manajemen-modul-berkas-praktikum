@@ -27,6 +27,7 @@ use App\Http\Controllers\praktikan\{
     AuthController as AuthControllerPraktikan,
     DashboardController as DashboardControllerPraktikan,
     berkas\BerkasPraktikumController as BerkasPraktikumPraktikan,
+    modul\ModulPraktikumController as ModulPraktikumPraktikan,
 };
 
 use Illuminate\Http\Client\Request;
@@ -73,6 +74,7 @@ Route::get('/logout-praktikan', [AuthControllerPraktikan::class, 'logout'])->nam
 Route::middleware(['role:1'])->name('praktikan.')->group(function () {
     Route::get('/dashboard-praktikan', DashboardControllerPraktikan::class)->name('dashboard');
     Route::resource('/berkas-praktikum', BerkasPraktikumPraktikan::class);
+    Route::get('/modul', ModulPraktikumPraktikan::class)->name('modul');
 });
 
 Route::middleware(['role:0'])->name('admin.')->group(function () {

@@ -21,7 +21,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Praktikum Aktif</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $praktikumAktif }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ count($praktikumAktif) }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fa fa-list fa-2x text-gray-300"></i>

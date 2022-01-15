@@ -18,11 +18,15 @@
 </div>
 
 @if (auth()->user()->role == 1)
-    <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('praktikan.berkas-praktikum.index') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Berkas Praktikum</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('praktikan.berkas-praktikum.index') }}">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Modul Praktikum</span></a>
     </li>
 @elseif (auth()->user()->role == 0)
     <!-- Nav Item - Pages Collapse Menu -->

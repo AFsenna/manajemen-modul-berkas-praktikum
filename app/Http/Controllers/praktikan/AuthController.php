@@ -45,8 +45,7 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        $login = ApiLabinfor::loginAdmin($request->npm, $request->password);
-
+        $login = ApiLabinfor::loginPraktikan($request->npm, $request->password);
         if ($login->status != "failed") {
             $data =  $login->users;
             $praktikan = User::where('role', 1)->where('credential', $data[0])->first();
