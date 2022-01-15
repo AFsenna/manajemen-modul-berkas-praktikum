@@ -30,7 +30,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files" : [
-            "App/Helpers/ApiLabinfor.php"
+            "app/Helpers/ApiLabinfor.php"
         ]
     },
     "autoload-dev": {
