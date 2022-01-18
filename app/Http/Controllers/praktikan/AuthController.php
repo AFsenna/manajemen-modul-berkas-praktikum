@@ -54,9 +54,16 @@ class AuthController extends Controller
                     'role' => 1,
                     'credential' => $data[0],
                     'name' => ucfirst($data[1]),
+                    'email' => $data[4],
                 ]);
                 Auth::login($praktikan);
             } else {
+                $id = $praktikan->id;
+                $user =  User::find($id);
+
+                $user->update([
+                    'email' => $data[4],
+                ]);
                 Auth::login($praktikan);
             }
             return redirect()->route('praktikan.dashboard');

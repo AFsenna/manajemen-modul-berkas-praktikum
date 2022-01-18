@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Exports\BerkasPraktikumExport;
 use app\Helpers\ApiLabinfor;
-
+use App\Models\User;
 
 class VerifikasiBerkasController extends Controller
 {
@@ -53,7 +53,7 @@ class VerifikasiBerkasController extends Controller
             }
 
             $aslab = ApiLabinfor::getAslabByID($jadwal->idAslab);
-
+            $userEmail = User::select('email')->where('id', $berkasPrak->idUser)->first();
 
             DB::beginTransaction();
             $berkasPrak->update([
@@ -72,7 +72,7 @@ class VerifikasiBerkasController extends Controller
                 'status' => $berkasPrak->status,
             ];
 
-            Mail::to("michaelaraona@gmail.com")->send(new EmailGoogle($details));
+            Mail::to($userEmail)->send(new EmailGoogle($details));
 
             Log::info("SUCCESS");
             DB::commit();
@@ -110,7 +110,8 @@ class VerifikasiBerkasController extends Controller
                 'status' => $berkasPrak->status,
             ];
 
-            Mail::to("michaelaraona@gmail.com")->send(new EmailGoogle($details));
+            $userEmail = User::select('email')->where('id', $berkasPrak->idUser)->first;
+            Mail::to($userEmail)->send(new EmailGoogle($details));
 
             Log::info("SUCCESS");
             DB::commit();
@@ -150,7 +151,9 @@ class VerifikasiBerkasController extends Controller
                 'status' => $berkasPrak->status,
             ];
 
-            Mail::to("michaelaraona@gmail.com")->send(new EmailGoogle($details));
+            $userEmail = User::select('email')->where('id', $berkasPrak->idUser)->first;
+            Mail::to($userEmail)->send(new EmailGoogle($details));
+
             Log::info("SUCCESS");
             DB::commit();
 

@@ -29,7 +29,7 @@ class PenyimpananBerkasController extends Controller
     public function store(Request $request)
     {
         $id = $request->idPraktikum;
-        $praktikumAktif = ApiLabinfor::getPraktikum($request->idPraktikum);
+        $praktikumAktif = ApiLabinfor::getPraktikum($id);
         $berkas = BerkasPraktikum::where('idPraktikum', $id)->get();
         return view('admin.berkasPraktikum.showBerkas', compact('praktikumAktif', 'berkas'));
     }
